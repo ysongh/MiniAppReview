@@ -20,3 +20,6 @@
 /coverage
 
 pnpm-lock.yaml
+
+# Hardhat Ignition default folder for deployments
+ignition/deployments/chain-31337

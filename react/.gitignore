@@ -23,3 +23,9 @@ pnpm-lock.yaml
 *.njsproj
 *.sln
 *.sw?
+
+# Hardhat Build Artifacts
+artifacts
+
+# Hardhat compilation (v2) support directory
+cache
