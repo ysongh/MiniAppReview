@@ -1,5 +1,6 @@
-import React, { useState } from 'react';
-import { Card, Rate, Tag, Input, Select, Button, Badge, Space, Avatar } from 'antd';
+import { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
+import { Card, Rate, Tag, Input, Select, Button, Space, Avatar } from 'antd';
 import { Search as SearchIcon, Grid3x3, Star, User, ExternalLink, Filter } from 'lucide-react';
 
 const { Search } = Input;
@@ -96,6 +97,8 @@ const mockApps = [
 const categories = ["All", "Social", "DeFi", "NFT", "Gaming", "Tools", "Media"];
 
 const Home = () => {
+  const navigate = useNavigate();
+
   const [searchTerm, setSearchTerm] = useState('');
   const [selectedCategory, setSelectedCategory] = useState('All');
   const [sortBy, setSortBy] = useState('rating');
@@ -208,6 +211,13 @@ const Home = () => {
       <div className="max-w-7xl mx-auto px-4 pb-8">
         <div className="text-sm text-gray-600 mb-4">
           Showing {filteredApps.length} {filteredApps.length === 1 ? 'app' : 'apps'}
+           <Button
+              onClick={() => navigate("/register")}
+              type="primary"
+              className="ml-4"
+            >
+              Register Mini App
+            </Button>
         </div>
 
         <div className="space-y-4">
