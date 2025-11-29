@@ -2,6 +2,9 @@ import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Input, Select, Button, Card, message, Alert } from 'antd';
 import { Plus, Info, CheckCircle, ArrowLeft } from 'lucide-react';
+import { useWriteContract } from "wagmi";
+
+import MiniAppReview from '../artifacts/contracts/MiniAppReview.sol/MiniAppReview.json';
 
 const { TextArea } = Input;
 const { Option } = Select;
@@ -35,6 +38,12 @@ const RegisterMiniApp = () => {
   const [errors, setErrors] = useState<any>({});
   const [loading, setLoading] = useState(false);
   const [registeredApp, setRegisteredApp] = useState<any>(null);
+
+  const {
+    writeContract,
+    data: txHash,
+    isPending
+  } = useWriteContract();
 
   const validateForm = () => {
     const newErrors: any = {};
@@ -81,12 +90,14 @@ const RegisterMiniApp = () => {
     setLoading(true);
     
     try {
-      // Simulate blockchain transaction
-      // const contract = new ethers.Contract(contractAddress, abi, signer);
-      // const tx = await contract.registerApp(formData.name, formData.description, formData.category, formData.appUrl);
-      // await tx.wait();
-      
-      await new Promise(resolve => setTimeout(resolve, 2000));
+      const {name, description, category, appUrl} = formData;
+
+      writeContract({
+        address: import.meta.env.VITE_CONTRACT_ADDRESS,
+        abi: MiniAppReview.abi,
+        functionName: "registerApp",
+        args: [name, description, category, appUrl]
+      })
       
       setRegisteredApp({
         id: Math.floor(Math.random() * 10000),
