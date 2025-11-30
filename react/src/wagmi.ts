@@ -3,12 +3,11 @@ import { http, createConfig } from "wagmi";
 import { base, mainnet, hardhat } from "wagmi/chains";
 
 export const config = createConfig({
-  chains: [base, mainnet],
+  chains: [base, mainnet, hardhat],
   connectors: [miniAppConnector()],
   transports: {
     [base.id]: http(),
     [mainnet.id]: http(),
-    //@ts-ignore
     [hardhat.id]: http(),
   },
 });
