@@ -179,34 +179,8 @@ const Home = () => {
         </div>
       </div>
 
-      {/* Stats Bar */}
-      <div className="max-w-7xl mx-auto px-4 py-4">
-        <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
-          <div className="bg-white rounded-lg p-3 shadow-sm">
-            <div className="text-2xl font-bold text-purple-600">{miniappids.length}</div>
-            <div className="text-xs text-gray-600">Total Apps</div>
-          </div>
-          <div className="bg-white rounded-lg p-3 shadow-sm">
-            <div className="text-2xl font-bold text-blue-600">
-              {mockApps.reduce((sum, app) => sum + app.reviewCount, 0)}
-            </div>
-            <div className="text-xs text-gray-600">Reviews</div>
-          </div>
-          <div className="bg-white rounded-lg p-3 shadow-sm">
-            <div className="text-2xl font-bold text-green-600">
-              {(mockApps.reduce((sum, app) => sum + app.averageRating, 0) / mockApps.length).toFixed(1)}
-            </div>
-            <div className="text-xs text-gray-600">Avg Rating</div>
-          </div>
-          <div className="bg-white rounded-lg p-3 shadow-sm">
-            <div className="text-2xl font-bold text-orange-600">{categories.length - 1}</div>
-            <div className="text-xs text-gray-600">Categories</div>
-          </div>
-        </div>
-      </div>
-
       {/* App List */}
-      <div className="max-w-7xl mx-auto px-4 pb-8">
+      <div className="max-w-7xl mx-auto px-4 pb-8 mt-2">
         <div className="text-sm text-gray-600 mb-4">
           Showing {filteredApps.length} {filteredApps.length === 1 ? 'app' : 'apps'}
            <Button
