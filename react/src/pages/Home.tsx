@@ -1,9 +1,11 @@
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { Card, Rate, Tag, Input, Select, Button, Space, Avatar } from 'antd';
-import { Search as SearchIcon, Grid3x3, Star, User, ExternalLink, Filter } from 'lucide-react';
+import { Input, Select, Button } from 'antd';
+import { Search as SearchIcon, Grid3x3, Filter } from 'lucide-react';
+import { useReadContract } from 'wagmi';
 
 import MiniAppCard from '../components/MiniAppCard';
+import MiniAppReview from '../artifacts/contracts/MiniAppReview.sol/MiniAppReview.json';
 
 const { Search } = Input;
 const { Option } = Select;
@@ -105,6 +107,12 @@ const Home = () => {
   const [selectedCategory, setSelectedCategory] = useState('All');
   const [sortBy, setSortBy] = useState('rating');
 
+  const { data: miniappids = [] } = useReadContract({
+    address: import.meta.env.VITE_CONTRACT_ADDRESS,
+    abi: MiniAppReview.abi,
+    functionName: 'getAllApps'
+  });
+
   // Filter and sort apps
   const filteredApps = mockApps
     .filter(app => {
@@ -175,7 +183,7 @@ const Home = () => {
       <div className="max-w-7xl mx-auto px-4 py-4">
         <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
           <div className="bg-white rounded-lg p-3 shadow-sm">
-            <div className="text-2xl font-bold text-purple-600">{mockApps.length}</div>
+            <div className="text-2xl font-bold text-purple-600">{miniappids.length}</div>
             <div className="text-xs text-gray-600">Total Apps</div>
           </div>
           <div className="bg-white rounded-lg p-3 shadow-sm">
@@ -211,8 +219,8 @@ const Home = () => {
         </div>
 
         <div className="space-y-4">
-          {filteredApps.map((app) => (
-            <MiniAppCard  key={app.id} app={app} />
+          {miniappids.map((id) => (
+            <MiniAppCard  key={id} id={id} />
           ))}
         </div>
 

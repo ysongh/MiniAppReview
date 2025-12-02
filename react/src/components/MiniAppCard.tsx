@@ -1,7 +1,9 @@
 import { Card, Rate, Tag, Button, Space, Avatar } from 'antd';
 import { Grid3x3, Star, User, ExternalLink } from 'lucide-react';
+import { useReadContract } from 'wagmi';
 
-// Define types for the contract response
+import MiniAppReview from '../artifacts/contracts/MiniAppReview.sol/MiniAppReview.json';
+
 interface MiniApp {
   name: string;
   category: string;
@@ -15,18 +17,15 @@ interface MiniApp {
   recommendPercent: bigint;
 }
 
-function MiniAppCard({ app }: {app : MiniApp }) {
-  const getDifficultyText = (difficulty: number) => {
-    if (difficulty <= 2) return 'Easy';
-    if (difficulty <= 3) return 'Medium';
-    return 'Advanced';
-  };
+function MiniAppCard({ id }: {id : BigInt }) {
+  const { data: miniapp = []} = useReadContract({
+    address: import.meta.env.VITE_CONTRACT_ADDRESS,
+    abi: MiniAppReview.abi,
+    functionName: 'apps',
+    args: [id]
+  });
 
-  const getDifficultyColor = (difficulty: number) => {
-    if (difficulty <= 2) return 'green';
-    if (difficulty <= 3) return 'orange';
-    return 'red';
-  };
+  console.log(miniapp);
 
   return (
     <Card
@@ -48,10 +47,10 @@ function MiniAppCard({ app }: {app : MiniApp }) {
           <div className="flex flex-col sm:flex-row sm:items-start sm:justify-between gap-2 mb-2">
             <div className="flex-1 min-w-0">
               <h3 className="text-lg font-bold text-gray-900 m-0 truncate">
-                {app.name}
+                {miniapp[1]}
               </h3>
               <p className="text-sm text-gray-600 m-0 line-clamp-2">
-                {app.description}
+                {miniapp[2]}
               </p>
             </div>
 
@@ -59,34 +58,28 @@ function MiniAppCard({ app }: {app : MiniApp }) {
             <div className="flex items-center gap-2 sm:flex-col sm:items-end flex-shrink-0">
               <div className="flex items-center gap-1">
                 <Star className="text-yellow-500" size={18} fill="currentColor" />
-                <span className="text-xl font-bold">{app.averageRating}</span>
+                <span className="text-xl font-bold">{miniapp[8]}</span>
               </div>
               <span className="text-xs text-gray-500">
-                {app.reviewCount} reviews
+                {miniapp[9].toString()} reviews
               </span>
             </div>
           </div>
 
           {/* Tags */}
           <div className="flex flex-wrap gap-2 mb-3">
-            <Tag color="purple">{app.category}</Tag>
-            <Tag color={getDifficultyColor(app.difficulty)}>
-              {getDifficultyText(app.difficulty)}
-            </Tag>
-            <Tag color="blue">
-              {app.recommendPercent}% recommend
-            </Tag>
+            <Tag color="purple">{miniapp[3]}</Tag>
           </div>
 
           {/* Ratings breakdown */}
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-2 mb-3">
             <div className="flex items-center gap-2">
               <span className="text-xs text-gray-600">Overall:</span>
-              <Rate disabled defaultValue={app.averageRating} allowHalf className="text-xs" />
+              <Rate disabled defaultValue={miniapp?.averageRating} allowHalf className="text-xs" />
             </div>
             <div className="flex items-center gap-2">
               <span className="text-xs text-gray-600">Quality:</span>
-              <Rate disabled defaultValue={app.quality} allowHalf className="text-xs" />
+              <Rate disabled defaultValue={miniapp?.quality} allowHalf className="text-xs" />
             </div>
           </div>
 
@@ -94,7 +87,7 @@ function MiniAppCard({ app }: {app : MiniApp }) {
           <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-2">
             <div className="flex items-center gap-2 text-xs text-gray-500">
               <User size={14} />
-              <span>{app.developer}</span>
+              <span>{miniapp[5]}</span>
             </div>
 
             <Space size="small" wrap>
@@ -102,7 +95,7 @@ function MiniAppCard({ app }: {app : MiniApp }) {
                 type="primary"
                 icon={<ExternalLink size={14} />}
                 size="small"
-                href={app.appUrl}
+                href={miniapp[4]}
                 target="_blank"
               >
                 Open App
