@@ -1,3 +1,4 @@
+import { useNavigate } from 'react-router-dom';
 import { Card, Rate, Tag, Button, Space, Avatar } from 'antd';
 import { Grid3x3, Star, User, ExternalLink } from 'lucide-react';
 import { useReadContract } from 'wagmi';
@@ -18,6 +19,8 @@ interface MiniApp {
 }
 
 function MiniAppCard({ id }: {id : BigInt }) {
+  const navigate = useNavigate();
+
   const { data: miniapp = []} = useReadContract({
     address: import.meta.env.VITE_CONTRACT_ADDRESS,
     abi: MiniAppReview.abi,
@@ -61,7 +64,7 @@ function MiniAppCard({ id }: {id : BigInt }) {
                 <span className="text-xl font-bold">{miniapp[8]}</span>
               </div>
               <span className="text-xs text-gray-500">
-                {miniapp[9].toString()} reviews
+                {miniapp[9]?.toString()} reviews
               </span>
             </div>
           </div>
@@ -101,6 +104,7 @@ function MiniAppCard({ id }: {id : BigInt }) {
                 Open App
               </Button>
               <Button
+                onClick={() => navigate("/app/" + id)}
                 size="small"
                 icon={<Star size={14} />}
               >

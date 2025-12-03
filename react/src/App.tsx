@@ -5,6 +5,7 @@ import { HashRouter, Route, Routes } from "react-router-dom";
 import ConnectMenu from "./components/ConnectMenu";
 import Home from "./pages/Home";
 import RegisterMiniApp from "./pages/RegisterMiniApp";
+import MiniAppDetail from "./pages/MiniAppDetail";
 
 function App() {
   useEffect(() => {
@@ -15,6 +16,9 @@ function App() {
    <HashRouter>
       <ConnectMenu />
       <Routes>
+        <Route
+          path="/app/:id"
+          element={<MiniAppDetail />} />
         <Route
           path="/register"
           element={<RegisterMiniApp />} />
