@@ -1,27 +1,12 @@
-import React, { useState } from 'react';
-import { Card, Rate, Tag, Button, Avatar, Progress, Modal, Input, message, Divider, Empty } from 'antd';
-import { ArrowLeft, ExternalLink, Star, User, Calendar, ThumbsUp, Share2, TrendingUp, Award } from 'lucide-react';
+import { useState } from 'react';
+import { useParams } from 'react-router-dom';
+import { Card, Rate, Tag, Button, Avatar, Progress, Modal, Input, message, Empty } from 'antd';
+import { ArrowLeft, ExternalLink, Star, User, Calendar, ThumbsUp, Share2 } from 'lucide-react';
+import { useReadContract } from 'wagmi';
+
+import MiniAppReview from '../artifacts/contracts/MiniAppReview.sol/MiniAppReview.json';
 
 const { TextArea } = Input;
-
-// Mock app data
-const mockApp = {
-  id: 1,
-  name: "FarQuest",
-  description: "Complete daily quests and earn rewards on Farcaster. Engage with the community, complete challenges, and climb the leaderboard to earn exclusive NFT rewards and badges.",
-  category: "Gaming",
-  appUrl: "https://farquest.app",
-  developer: "0x1234567890abcdef1234567890abcdef12345678",
-  developerName: "@farquest",
-  averageRating: 4.5,
-  reviewCount: 128,
-  recommendPercent: 92,
-  isActive: true,
-  registeredAt: "2024-01-15",
-  totalRating: 576,
-  difficulty: 2,
-  quality: 4.8
-};
 
 // Mock reviews
 const mockReviews = [
@@ -72,6 +57,8 @@ const mockReviews = [
 ];
 
 const MiniAppDetail = () => {
+  const { id } = useParams();
+  
   const [reviewModalVisible, setReviewModalVisible] = useState(false);
   const [reviewForm, setReviewForm] = useState({
     rating: 0,
@@ -81,6 +68,15 @@ const MiniAppDetail = () => {
     wouldRecommend: true
   });
   const [sortBy, setSortBy] = useState('helpful');
+
+  const { data: miniapp = []} = useReadContract({
+    address: import.meta.env.VITE_CONTRACT_ADDRESS,
+    abi: MiniAppReview.abi,
+    functionName: 'apps',
+    args: [id]
+  });
+
+  console.log(miniapp);
 
   const handleSubmitReview = () => {
     if (reviewForm.rating === 0) {
@@ -170,36 +166,24 @@ const MiniAppDetail = () => {
               <div className="flex flex-col sm:flex-row sm:items-start sm:justify-between gap-4 mb-3">
                 <div className="flex-1">
                   <h1 className="text-3xl font-bold text-gray-900 mb-2">
-                    {mockApp.name}
+                    {miniapp[1]}
                   </h1>
                   <div className="flex flex-wrap gap-2 mb-3">
-                    <Tag color="purple" className="text-sm">{mockApp.category}</Tag>
-                    <Tag color={getDifficultyColor(mockApp.difficulty)} className="text-sm">
-                      {getDifficultyText(mockApp.difficulty)}
-                    </Tag>
-                    {mockApp.isActive ? (
-                      <Tag color="green" className="text-sm">Active</Tag>
-                    ) : (
-                      <Tag color="red" className="text-sm">Inactive</Tag>
-                    )}
+                    <Tag color="purple" className="text-sm">{miniapp[3]}</Tag>
                   </div>
                   <p className="text-gray-600 mb-4">
-                    {mockApp.description}
+                    {miniapp[2]}
                   </p>
                 </div>
 
                 {/* Rating Overview */}
                 <div className="flex flex-col items-center bg-gray-50 rounded-lg p-4 min-w-[140px]">
                   <div className="text-4xl font-bold text-purple-600 mb-1">
-                    {mockApp.averageRating}
+                    {miniapp[8]?.toString()}
                   </div>
-                  <Rate disabled defaultValue={mockApp.averageRating} allowHalf className="text-sm mb-2" />
+                  <Rate disabled defaultValue={miniapp[8]?.toString()} allowHalf className="text-sm mb-2" />
                   <div className="text-sm text-gray-600 mb-1">
-                    {mockApp.reviewCount} reviews
-                  </div>
-                  <div className="flex items-center gap-1 text-xs text-green-600">
-                    <ThumbsUp size={12} />
-                    {mockApp.recommendPercent}% recommend
+                    {miniapp[8]?.toString()} reviews
                   </div>
                 </div>
               </div>
@@ -207,10 +191,10 @@ const MiniAppDetail = () => {
               {/* Developer Info */}
               <div className="flex items-center gap-2 text-sm text-gray-600 mb-4">
                 <User size={16} />
-                <span>By {mockApp.developerName}</span>
+                <span>By {miniapp[5]}</span>
                 <span className="text-gray-400">•</span>
                 <Calendar size={16} />
-                <span>Registered {mockApp.registeredAt}</span>
+                <span>Registered {miniapp[6]}</span>
               </div>
 
               {/* Action Buttons */}
@@ -219,7 +203,7 @@ const MiniAppDetail = () => {
                   type="primary"
                   size="large"
                   icon={<ExternalLink size={18} />}
-                  href={mockApp.appUrl}
+                  href={miniapp[4]}
                   target="_blank"
                 >
                   Open App
@@ -269,55 +253,16 @@ const MiniAppDetail = () => {
               </div>
             </Card>
 
-            {/* Quality Metrics */}
-            <Card title="Quality Metrics" className="shadow-lg">
-              <div className="space-y-4">
-                <div>
-                  <div className="flex justify-between mb-2">
-                    <span className="text-sm text-gray-600">Overall Quality</span>
-                    <span className="text-sm font-semibold">{mockApp.quality}/5</span>
-                  </div>
-                  <Progress 
-                    percent={(mockApp.quality / 5) * 100} 
-                    strokeColor="#9333ea"
-                    showInfo={false}
-                  />
-                </div>
-                <div>
-                  <div className="flex justify-between mb-2">
-                    <span className="text-sm text-gray-600">Ease of Use</span>
-                    <span className="text-sm font-semibold">{5 - mockApp.difficulty + 1}/5</span>
-                  </div>
-                  <Progress 
-                    percent={((5 - mockApp.difficulty + 1) / 5) * 100} 
-                    strokeColor="#10b981"
-                    showInfo={false}
-                  />
-                </div>
-                <div>
-                  <div className="flex justify-between mb-2">
-                    <span className="text-sm text-gray-600">Would Recommend</span>
-                    <span className="text-sm font-semibold">{mockApp.recommendPercent}%</span>
-                  </div>
-                  <Progress 
-                    percent={mockApp.recommendPercent} 
-                    strokeColor="#3b82f6"
-                    showInfo={false}
-                  />
-                </div>
-              </div>
-            </Card>
-
             {/* Developer Card */}
             <Card title="Developer" className="shadow-lg">
               <div className="flex items-center gap-3 mb-3">
                 <Avatar size={48} icon={<User />} className="bg-purple-500" />
                 <div>
                   <div className="font-semibold text-gray-900">
-                    {mockApp.developerName}
+                    ?
                   </div>
                   <div className="text-xs text-gray-500 font-mono">
-                    {mockApp.developer.slice(0, 10)}...
+                    {miniapp[5]}
                   </div>
                 </div>
               </div>
@@ -330,7 +275,7 @@ const MiniAppDetail = () => {
             <Card className="shadow-lg">
               <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 mb-6">
                 <h2 className="text-xl font-bold text-gray-900">
-                  Reviews ({mockApp.reviewCount})
+                  Reviews ({miniapp[8]?.toString()})
                 </h2>
                 <div className="flex gap-2">
                   <Button
