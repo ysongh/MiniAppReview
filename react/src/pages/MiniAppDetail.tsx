@@ -8,59 +8,10 @@ import { formatAddress } from '../utils/format';
 import MiniAppReview from '../artifacts/contracts/MiniAppReview.sol/MiniAppReview.json';
 import ReviewModal from '../components/ReviewModal';
 
-// Mock reviews
-const mockReviews = [
-  {
-    reviewer: "0xabcd...ef12",
-    reviewerName: "@alice",
-    rating: 5,
-    comment: "Amazing app! The quest system is really engaging and the rewards are worth it. Love how it integrates seamlessly with Farcaster.",
-    difficulty: 2,
-    quality: 5,
-    wouldRecommend: true,
-    timestamp: "2024-11-25",
-    helpfulCount: 23
-  },
-  {
-    reviewer: "0x1234...5678",
-    reviewerName: "@bob",
-    rating: 4,
-    comment: "Great concept and execution. Would love to see more quest variety in future updates.",
-    difficulty: 2,
-    quality: 5,
-    wouldRecommend: true,
-    timestamp: "2024-11-20",
-    helpfulCount: 15
-  },
-  {
-    reviewer: "0x9876...4321",
-    reviewerName: "@charlie",
-    rating: 5,
-    comment: "Best gaming app on Farcaster! The daily quests keep me coming back every day.",
-    difficulty: 1,
-    quality: 5,
-    wouldRecommend: true,
-    timestamp: "2024-11-18",
-    helpfulCount: 31
-  },
-  {
-    reviewer: "0xdef0...1234",
-    reviewerName: "@dana",
-    rating: 4,
-    comment: "Really fun but could use better onboarding for new users. Once you get the hang of it, it's excellent.",
-    difficulty: 3,
-    quality: 4,
-    wouldRecommend: true,
-    timestamp: "2024-11-15",
-    helpfulCount: 8
-  }
-];
-
 const MiniAppDetail = () => {
   const { id } = useParams();
 
   const [reviewModalVisible, setReviewModalVisible] = useState(false);
-  const [sortBy, setSortBy] = useState('helpful');
 
   const { data: miniapp = []} = useReadContract({
     address: import.meta.env.VITE_CONTRACT_ADDRESS,
@@ -69,7 +20,14 @@ const MiniAppDetail = () => {
     args: [id]
   });
 
-  console.log(miniapp);
+  const { data: reviews = []} = useReadContract({
+    address: import.meta.env.VITE_CONTRACT_ADDRESS,
+    abi: MiniAppReview.abi,
+    functionName: 'getAppReviews',
+    args: [id]
+  });
+
+  console.log(reviews);
 
   const handleMarkHelpful = (index: number) => {
     message.success('Marked as helpful!');
@@ -100,13 +58,6 @@ const MiniAppDetail = () => {
       { stars: 1, count: 1, percent: 1 }
     ];
   };
-
-  const sortedReviews = [...mockReviews].sort((a, b) => {
-    if (sortBy === 'helpful') return b.helpfulCount - a.helpfulCount;
-    if (sortBy === 'recent') return new Date(b.timestamp).getTime() - new Date(a.timestamp).getTime();
-    if (sortBy === 'rating') return b.rating - a.rating;
-    return 0;
-  });
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-purple-50 to-blue-50">
@@ -251,35 +202,12 @@ const MiniAppDetail = () => {
             <Card className="shadow-lg">
               <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 mb-6">
                 <h2 className="text-xl font-bold text-gray-900">
-                  Reviews ({miniapp[8]?.toString()})
+                  Reviews ({reviews?.length})
                 </h2>
-                <div className="flex gap-2">
-                  <Button
-                    type={sortBy === 'helpful' ? 'primary' : 'default'}
-                    size="small"
-                    onClick={() => setSortBy('helpful')}
-                  >
-                    Most Helpful
-                  </Button>
-                  <Button
-                    type={sortBy === 'recent' ? 'primary' : 'default'}
-                    size="small"
-                    onClick={() => setSortBy('recent')}
-                  >
-                    Most Recent
-                  </Button>
-                  <Button
-                    type={sortBy === 'rating' ? 'primary' : 'default'}
-                    size="small"
-                    onClick={() => setSortBy('rating')}
-                  >
-                    Highest Rated
-                  </Button>
-                </div>
               </div>
 
               <div className="space-y-4">
-                {sortedReviews.map((review, index) => (
+                {reviews.map((review, index) => (
                   <div key={index} className="border-b border-gray-200 last:border-0 pb-4 last:pb-0">
                     <div className="flex items-start gap-3">
                       <Avatar size={40} icon={<User />} className="bg-blue-500 flex-shrink-0" />
@@ -287,22 +215,22 @@ const MiniAppDetail = () => {
                         <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-2 mb-2">
                           <div>
                             <div className="font-semibold text-gray-900">
-                              {review.reviewerName}
+                              {formatAddress(review?.reviewer)}
                             </div>
                             <div className="flex items-center gap-2 text-xs text-gray-500">
                               <Calendar size={12} />
-                              {review.timestamp}
+                              {review?.timestamp.toString()}
                             </div>
                           </div>
-                          <Rate disabled defaultValue={review.rating} className="text-sm" />
+                          <Rate disabled defaultValue={review?.rating.toString()} className="text-sm" />
                         </div>
 
                         <div className="flex gap-2 mb-2">
                           <Tag color="blue" className="text-xs">
-                            Quality: {review.quality}/5
+                            Quality: {review?.quality.toString()}/5
                           </Tag>
                           <Tag color={getDifficultyColor(review.difficulty)} className="text-xs">
-                            {getDifficultyText(review.difficulty)}
+                            {getDifficultyText(review?.difficulty.toString())}
                           </Tag>
                           {review.wouldRecommend && (
                             <Tag color="green" className="text-xs">
@@ -321,7 +249,7 @@ const MiniAppDetail = () => {
                           icon={<ThumbsUp size={14} />}
                           onClick={() => handleMarkHelpful(index)}
                         >
-                          Helpful ({review.helpfulCount})
+                          Helpful
                         </Button>
                       </div>
                     </div>
@@ -329,7 +257,7 @@ const MiniAppDetail = () => {
                 ))}
               </div>
 
-              {sortedReviews.length === 0 && (
+              {reviews?.length === 0 && (
                 <Empty
                   description="No reviews yet. Be the first to review!"
                   className="my-8"
