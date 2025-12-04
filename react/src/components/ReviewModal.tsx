@@ -1,9 +1,12 @@
 import { useState } from 'react';
 import { Rate, Button, Modal, Input, message } from 'antd';
+import { useWriteContract } from "wagmi";
+
+import MiniAppReview from '../artifacts/contracts/MiniAppReview.sol/MiniAppReview.json';
 
 const { TextArea } = Input;
 
-function ReviewModal({ reviewModalVisible, setReviewModalVisible } : { reviewModalVisible: boolean, setReviewModalVisible: Function }) {
+function ReviewModal({ id, reviewModalVisible, setReviewModalVisible } : { id?: string, reviewModalVisible: boolean, setReviewModalVisible: Function }) {
   const [reviewForm, setReviewForm] = useState({
     rating: 0,
     difficulty: 0,
@@ -12,11 +15,31 @@ function ReviewModal({ reviewModalVisible, setReviewModalVisible } : { reviewMod
     wouldRecommend: true
   });
 
+  const {
+    writeContract,
+    data: txHash,
+    isPending
+  } = useWriteContract();
+
   const handleSubmitReview = () => {
     if (reviewForm.rating === 0) {
       message.error('Please provide a rating');
       return;
     }
+
+    writeContract({
+      address: import.meta.env.VITE_CONTRACT_ADDRESS,
+      abi: MiniAppReview.abi,
+      functionName: "submitReview",
+      args: [
+        id,
+        reviewForm.rating,
+        reviewForm.comment,
+        reviewForm.difficulty,
+        reviewForm.quality,
+        reviewForm.wouldRecommend
+      ]
+    })
     
     message.success('Review submitted successfully!');
     setReviewModalVisible(false);

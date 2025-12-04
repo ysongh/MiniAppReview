@@ -342,6 +342,7 @@ const MiniAppDetail = () => {
 
       {/* Review Modal */}
       <ReviewModal
+        id={id}
         reviewModalVisible={reviewModalVisible}
         setReviewModalVisible={setReviewModalVisible} />
     </div>
