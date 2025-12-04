@@ -1,12 +1,12 @@
 import { useState } from 'react';
 import { useParams } from 'react-router-dom';
-import { Card, Rate, Tag, Button, Avatar, Progress, Modal, Input, message, Empty } from 'antd';
+import { Card, Rate, Tag, Button, Avatar, Progress, message, Empty } from 'antd';
 import { ArrowLeft, ExternalLink, Star, User, Calendar, ThumbsUp, Share2 } from 'lucide-react';
 import { useReadContract } from 'wagmi';
 
+import { formatAddress } from '../utils/format';
 import MiniAppReview from '../artifacts/contracts/MiniAppReview.sol/MiniAppReview.json';
-
-const { TextArea } = Input;
+import ReviewModal from '../components/ReviewModal';
 
 // Mock reviews
 const mockReviews = [
@@ -58,15 +58,8 @@ const mockReviews = [
 
 const MiniAppDetail = () => {
   const { id } = useParams();
-  
+
   const [reviewModalVisible, setReviewModalVisible] = useState(false);
-  const [reviewForm, setReviewForm] = useState({
-    rating: 0,
-    difficulty: 0,
-    quality: 0,
-    comment: '',
-    wouldRecommend: true
-  });
   const [sortBy, setSortBy] = useState('helpful');
 
   const { data: miniapp = []} = useReadContract({
@@ -77,23 +70,6 @@ const MiniAppDetail = () => {
   });
 
   console.log(miniapp);
-
-  const handleSubmitReview = () => {
-    if (reviewForm.rating === 0) {
-      message.error('Please provide a rating');
-      return;
-    }
-    
-    message.success('Review submitted successfully!');
-    setReviewModalVisible(false);
-    setReviewForm({
-      rating: 0,
-      difficulty: 0,
-      quality: 0,
-      comment: '',
-      wouldRecommend: true
-    });
-  };
 
   const handleMarkHelpful = (index: number) => {
     message.success('Marked as helpful!');
@@ -191,7 +167,7 @@ const MiniAppDetail = () => {
               {/* Developer Info */}
               <div className="flex items-center gap-2 text-sm text-gray-600 mb-4">
                 <User size={16} />
-                <span>By {miniapp[5]}</span>
+                <span>By {formatAddress(miniapp[5])}</span>
                 <span className="text-gray-400">•</span>
                 <Calendar size={16} />
                 <span>Registered {miniapp[6]}</span>
@@ -262,7 +238,7 @@ const MiniAppDetail = () => {
                     ?
                   </div>
                   <div className="text-xs text-gray-500 font-mono">
-                    {miniapp[5]}
+                    {formatAddress(miniapp[5])}
                   </div>
                 </div>
               </div>
@@ -365,93 +341,9 @@ const MiniAppDetail = () => {
       </div>
 
       {/* Review Modal */}
-      <Modal
-        title="Write a Review"
-        open={reviewModalVisible}
-        onCancel={() => setReviewModalVisible(false)}
-        footer={null}
-        width={600}
-      >
-        <div className="space-y-4">
-          <div>
-            <label className="block font-semibold text-gray-700 mb-2">
-              Overall Rating <span className="text-red-500">*</span>
-            </label>
-            <Rate
-              value={reviewForm.rating}
-              onChange={(value) => setReviewForm({...reviewForm, rating: value})}
-              className="text-2xl"
-            />
-          </div>
-
-          <div>
-            <label className="block font-semibold text-gray-700 mb-2">
-              Quality
-            </label>
-            <Rate
-              value={reviewForm.quality}
-              onChange={(value) => setReviewForm({...reviewForm, quality: value})}
-            />
-          </div>
-
-          <div>
-            <label className="block font-semibold text-gray-700 mb-2">
-              Difficulty
-            </label>
-            <Rate
-              value={reviewForm.difficulty}
-              onChange={(value) => setReviewForm({...reviewForm, difficulty: value})}
-            />
-            <div className="text-xs text-gray-500 mt-1">
-              1 = Very Easy, 5 = Very Difficult
-            </div>
-          </div>
-
-          <div>
-            <label className="block font-semibold text-gray-700 mb-2">
-              Your Review
-            </label>
-            <TextArea
-              rows={4}
-              placeholder="Share your experience with this app..."
-              value={reviewForm.comment}
-              onChange={(e) => setReviewForm({...reviewForm, comment: e.target.value})}
-              maxLength={500}
-              showCount
-            />
-          </div>
-
-          <div className="flex items-center gap-2">
-            <input
-              type="checkbox"
-              id="recommend"
-              checked={reviewForm.wouldRecommend}
-              onChange={(e) => setReviewForm({...reviewForm, wouldRecommend: e.target.checked})}
-              className="w-4 h-4"
-            />
-            <label htmlFor="recommend" className="text-sm text-gray-700">
-              I would recommend this app
-            </label>
-          </div>
-
-          <div className="flex gap-3 pt-4">
-            <Button
-              type="primary"
-              size="large"
-              block
-              onClick={handleSubmitReview}
-            >
-              Submit Review
-            </Button>
-            <Button
-              size="large"
-              onClick={() => setReviewModalVisible(false)}
-            >
-              Cancel
-            </Button>
-          </div>
-        </div>
-      </Modal>
+      <ReviewModal
+        reviewModalVisible={reviewModalVisible}
+        setReviewModalVisible={setReviewModalVisible} />
     </div>
   );
 };
