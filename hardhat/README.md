@@ -8,3 +8,6 @@ The project includes native support for TypeScript, Hardhat scripts, tasks, and 
 
 ## Deploy to localhost
 npx hardhat ignition deploy ./ignition/modules/MiniAppReview.ts --network localhost
+
+## Deploy to Celo Sepolia
+npx hardhat ignition deploy ./ignition/modules/MiniAppReview.ts --network celoSepolia

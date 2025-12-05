@@ -34,6 +34,12 @@ export default defineConfig({
       url: configVariable("SEPOLIA_RPC_URL"),
       accounts: [configVariable("SEPOLIA_PRIVATE_KEY")],
     },
+    celoSepolia: {
+      type: "http",
+      url: "https://forno.celo-sepolia.celo-testnet.org",
+      accounts: [configVariable("PRIVATE_KEY")],
+      chainId: 11142220
+    },
   },
   paths: {
     artifacts: '../react/src/artifacts',
