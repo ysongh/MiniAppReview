@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { useParams } from 'react-router-dom';
+import { useParams, useNavigate } from 'react-router-dom';
 import { Card, Rate, Tag, Button, Avatar, Progress, message, Empty } from 'antd';
 import { ArrowLeft, ExternalLink, Star, User, Calendar, ThumbsUp, Share2 } from 'lucide-react';
 import { useReadContract } from 'wagmi';
@@ -10,6 +10,7 @@ import ReviewModal from '../components/ReviewModal';
 
 const MiniAppDetail = () => {
   const { id } = useParams();
+  const navigate = useNavigate();
 
   const [reviewModalVisible, setReviewModalVisible] = useState(false);
 
@@ -65,6 +66,7 @@ const MiniAppDetail = () => {
       <div className="bg-white shadow-sm sticky top-0 z-10">
         <div className="max-w-5xl mx-auto px-4 py-4">
           <Button
+            onClick={() => navigate("/")}
             icon={<ArrowLeft size={16} />}
             type="text"
           >
@@ -77,17 +79,6 @@ const MiniAppDetail = () => {
         {/* App Header Card */}
         <Card className="shadow-lg mb-6">
           <div className="flex flex-col md:flex-row gap-6">
-            {/* App Icon */}
-            <div className="flex-shrink-0">
-              <Avatar
-                size={120}
-                shape="square"
-                className="bg-gradient-to-br from-purple-400 to-blue-500"
-              >
-                <Star size={60} />
-              </Avatar>
-            </div>
-
             {/* App Info */}
             <div className="flex-1 min-w-0">
               <div className="flex flex-col sm:flex-row sm:items-start sm:justify-between gap-4 mb-3">
