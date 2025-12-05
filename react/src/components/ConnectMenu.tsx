@@ -62,7 +62,6 @@ const ConnectMenu = () => {
   const navLinks = [
     { label: 'Gallery', href: '/', icon: <Grid3x3 size={18} /> },
     { label: 'Register App', href: '/register', icon: <Plus size={18} /> },
-    { label: 'Top Rated', href: '/top-rated', icon: <Star size={18} /> },
   ];
 
   return (
@@ -76,11 +75,8 @@ const ConnectMenu = () => {
               <div className="bg-gradient-to-br from-purple-500 to-blue-500 p-2 rounded-lg">
                 <Grid3x3 size={24} className="text-white" />
               </div>
-              <div className="hidden sm:block">
+              <div className="sm:block">
                 <h1 className="text-xl font-bold text-gray-900 m-0">Mini Apps Review</h1>
-              </div>
-              <div className="block sm:hidden">
-                <h1 className="text-lg font-bold text-gray-900 m-0">FC Apps</h1>
               </div>
             </div>
 
