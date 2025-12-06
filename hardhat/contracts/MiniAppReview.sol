@@ -15,7 +15,7 @@ contract MiniAppReview {
         string description;
         string category;
         string appUrl;
-        address developer;
+        address from;
         uint256 registeredAt;
         bool isActive;
         uint256 totalRating;        // Sum of all ratings (1-5)
@@ -44,7 +44,7 @@ contract MiniAppReview {
     mapping(uint256 => mapping(address => uint256)) public reviewIndex;
     mapping(uint256 => mapping(address => mapping(address => bool))) public hasMarkedHelpful;
     
-    mapping(address => uint256[]) public developerApps;
+    mapping(address => uint256[]) public posterPost;
     uint256[] public allAppIds;
     string[] public categories;
     
@@ -99,14 +99,14 @@ contract MiniAppReview {
             description: _description,
             category: _category,
             appUrl: _appUrl,
-            developer: msg.sender,
+            from: msg.sender,
             registeredAt: block.timestamp,
             isActive: true,
             totalRating: 0,
             reviewCount: 0
         });
         
-        developerApps[msg.sender].push(totalApps);
+        posterPost[msg.sender].push(totalApps);
         allAppIds.push(totalApps);
         
         emit AppRegistered(totalApps, _name, msg.sender);
@@ -127,7 +127,6 @@ contract MiniAppReview {
     ) external appExists(_appId) validRating(_rating) validRating(_difficulty) validRating(_quality) {
         App storage app = apps[_appId];
         require(app.isActive, "App not active");
-        require(msg.sender != app.developer, "Developers cannot review their own app");
         
         if (hasReviewed[_appId][msg.sender]) {
             // Update existing review
@@ -193,7 +192,7 @@ contract MiniAppReview {
         string memory _appUrl
     ) external appExists(_appId) {
         App storage app = apps[_appId];
-        require(msg.sender == app.developer, "Only developer can update");
+        require(msg.sender == app.from, "Only Poster can update");
         
         app.name = _name;
         app.description = _description;
@@ -208,7 +207,7 @@ contract MiniAppReview {
      */
     function setAppStatus(uint256 _appId, bool _isActive) external appExists(_appId) {
         App storage app = apps[_appId];
-        require(msg.sender == owner || msg.sender == app.developer, "Unauthorized");
+        require(msg.sender == owner || msg.sender == app.from, "Unauthorized");
         
         app.isActive = _isActive;
         emit AppStatusChanged(_appId, _isActive);
@@ -312,8 +311,8 @@ contract MiniAppReview {
         return result;
     }
     
-    function getDeveloperApps(address _developer) external view returns (uint256[] memory) {
-        return developerApps[_developer];
+    function getPosterPost(address _developer) external view returns (uint256[] memory) {
+        return posterPost[_developer];
     }
     
     function addCategory(string memory _category) external onlyOwner {
