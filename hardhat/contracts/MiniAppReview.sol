@@ -231,6 +231,13 @@ contract MiniAppReview {
     function getAppReviews(uint256 _appId) external view appExists(_appId) returns (Review[] memory) {
         return appReviews[_appId];
     }
+
+    /**
+     * @dev Get all reviews for an app
+     */
+    function getAppDetail(uint256 _appId) external view appExists(_appId) returns (App memory) {
+        return apps[_appId];
+    }
     
     /**
      * @dev Get app details with rating stats

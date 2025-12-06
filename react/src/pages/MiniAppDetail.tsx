@@ -8,18 +8,33 @@ import { formatAddress } from '../utils/format';
 import MiniAppReview from '../artifacts/contracts/MiniAppReview.sol/MiniAppReview.json';
 import ReviewModal from '../components/ReviewModal';
 
+interface MiniApp {
+  name: string;
+  category: string;
+  description: string;
+  from: string;
+  appUrl: string;
+  difficulty: number;
+  totalRating: bigint;
+  averageRating: bigint;
+  reviewCount: bigint;
+  registeredAt: bigint;
+  isActive: boolean;
+  recommendPercent: bigint;
+}
+
 const MiniAppDetail = () => {
   const { id } = useParams();
   const navigate = useNavigate();
 
   const [reviewModalVisible, setReviewModalVisible] = useState(false);
 
-  const { data: miniapp = []} = useReadContract({
+  const { data: miniapp } = useReadContract({
     address: import.meta.env.VITE_CONTRACT_ADDRESS,
     abi: MiniAppReview.abi,
-    functionName: 'apps',
+    functionName: 'getAppDetail',
     args: [id]
-  });
+  }) as { data: MiniApp | undefined };
 
   const { data: reviews = []} = useReadContract({
     address: import.meta.env.VITE_CONTRACT_ADDRESS,
@@ -84,24 +99,24 @@ const MiniAppDetail = () => {
               <div className="flex flex-col sm:flex-row sm:items-start sm:justify-between gap-4 mb-3">
                 <div className="flex-1">
                   <h1 className="text-3xl font-bold text-gray-900 mb-2">
-                    {miniapp[1]}
+                    {miniapp?.name}
                   </h1>
                   <div className="flex flex-wrap gap-2 mb-3">
-                    <Tag color="purple" className="text-sm">{miniapp[3]}</Tag>
+                    <Tag color="purple" className="text-sm">{miniapp?.category}</Tag>
                   </div>
                   <p className="text-gray-600 mb-4">
-                    {miniapp[2]}
+                    {miniapp?.description}
                   </p>
                 </div>
 
                 {/* Rating Overview */}
                 <div className="flex flex-col items-center bg-gray-50 rounded-lg p-4 min-w-[140px]">
                   <div className="text-4xl font-bold text-purple-600 mb-1">
-                    {miniapp[8]?.toString()}
+                    {Number(miniapp?.totalRating)}
                   </div>
-                  <Rate disabled defaultValue={miniapp[8]?.toString()} allowHalf className="text-sm mb-2" />
+                  <Rate disabled defaultValue={Number(miniapp?.totalRating)} allowHalf className="text-sm mb-2" />
                   <div className="text-sm text-gray-600 mb-1">
-                    {miniapp[8]?.toString()} reviews
+                    {Number(miniapp?.reviewCount)} reviews
                   </div>
                 </div>
               </div>
@@ -109,10 +124,10 @@ const MiniAppDetail = () => {
               {/* Developer Info */}
               <div className="flex items-center gap-2 text-sm text-gray-600 mb-4">
                 <User size={16} />
-                <span>By {formatAddress(miniapp[5])}</span>
+                <span>By {formatAddress(miniapp?.from)}</span>
                 <span className="text-gray-400">•</span>
                 <Calendar size={16} />
-                <span>Registered {miniapp[6]}</span>
+                <span>Registered {Number(miniapp?.registeredAt)}</span>
               </div>
 
               {/* Action Buttons */}
@@ -121,7 +136,7 @@ const MiniAppDetail = () => {
                   type="primary"
                   size="large"
                   icon={<ExternalLink size={18} />}
-                  href={miniapp[4]}
+                  href={miniapp?.appUrl}
                   target="_blank"
                 >
                   Open App
@@ -180,7 +195,7 @@ const MiniAppDetail = () => {
                     ?
                   </div>
                   <div className="text-xs text-gray-500 font-mono">
-                    {formatAddress(miniapp[5])}
+                    {formatAddress(miniapp?.from)}
                   </div>
                 </div>
               </div>

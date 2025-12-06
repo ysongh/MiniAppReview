@@ -4,13 +4,14 @@ import { Grid3x3, Star, User, ExternalLink } from 'lucide-react';
 import { useReadContract } from 'wagmi';
 
 import MiniAppReview from '../artifacts/contracts/MiniAppReview.sol/MiniAppReview.json';
+import { formatAddress } from '../utils/format';
 
 interface MiniApp {
   name: string;
   category: string;
   description: string;
+  from: string;
   appUrl: string;
-  developer: string;
   difficulty: number;
   averageRating: bigint;
   reviewCount: bigint;
@@ -21,12 +22,12 @@ interface MiniApp {
 function MiniAppCard({ id }: {id : BigInt }) {
   const navigate = useNavigate();
 
-  const { data: miniapp = []} = useReadContract({
+  const { data: miniapp } = useReadContract({
     address: import.meta.env.VITE_CONTRACT_ADDRESS,
     abi: MiniAppReview.abi,
-    functionName: 'apps',
+    functionName: 'getAppDetail',
     args: [id]
-  });
+  }) as { data: MiniApp | undefined };
 
   console.log(miniapp);
 
@@ -50,10 +51,10 @@ function MiniAppCard({ id }: {id : BigInt }) {
           <div className="flex flex-col sm:flex-row sm:items-start sm:justify-between gap-2 mb-2">
             <div className="flex-1 min-w-0">
               <h3 className="text-lg font-bold text-gray-900 m-0 truncate">
-                {miniapp[1]}
+                {miniapp?.name}
               </h3>
               <p className="text-sm text-gray-600 m-0 line-clamp-2">
-                {miniapp[2]}
+                {miniapp?.description}
               </p>
             </div>
 
@@ -61,28 +62,28 @@ function MiniAppCard({ id }: {id : BigInt }) {
             <div className="flex items-center gap-2 sm:flex-col sm:items-end flex-shrink-0">
               <div className="flex items-center gap-1">
                 <Star className="text-yellow-500" size={18} fill="currentColor" />
-                <span className="text-xl font-bold">{miniapp[8]}</span>
+                <span className="text-xl font-bold">{Number(miniapp?.reviewCount)}</span>
               </div>
               <span className="text-xs text-gray-500">
-                {miniapp[9]?.toString()} reviews
+                {Number(miniapp?.reviewCount)} reviews
               </span>
             </div>
           </div>
 
           {/* Tags */}
           <div className="flex flex-wrap gap-2 mb-3">
-            <Tag color="purple">{miniapp[3]}</Tag>
+            <Tag color="purple">{miniapp?.category}</Tag>
           </div>
 
           {/* Ratings breakdown */}
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-2 mb-3">
             <div className="flex items-center gap-2">
               <span className="text-xs text-gray-600">Overall:</span>
-              <Rate disabled defaultValue={miniapp?.averageRating} allowHalf className="text-xs" />
+              <Rate disabled defaultValue={miniapp?.reviewCount} allowHalf className="text-xs" />
             </div>
             <div className="flex items-center gap-2">
               <span className="text-xs text-gray-600">Quality:</span>
-              <Rate disabled defaultValue={miniapp?.quality} allowHalf className="text-xs" />
+              <Rate disabled defaultValue={miniapp?.reviewCount} allowHalf className="text-xs" />
             </div>
           </div>
 
@@ -90,7 +91,7 @@ function MiniAppCard({ id }: {id : BigInt }) {
           <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-2">
             <div className="flex items-center gap-2 text-xs text-gray-500">
               <User size={14} />
-              <span>{miniapp[5]}</span>
+              <span>{formatAddress(miniapp?.from)}</span>
             </div>
 
             <Space size="small" wrap>
@@ -98,7 +99,7 @@ function MiniAppCard({ id }: {id : BigInt }) {
                 type="primary"
                 icon={<ExternalLink size={14} />}
                 size="small"
-                href={miniapp[4]}
+                href={miniapp?.appUrl}
                 target="_blank"
               >
                 Open App
