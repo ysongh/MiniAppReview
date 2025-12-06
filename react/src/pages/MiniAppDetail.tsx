@@ -4,7 +4,7 @@ import { Card, Rate, Tag, Button, Avatar, Progress, message, Empty } from 'antd'
 import { ArrowLeft, ExternalLink, Star, User, Calendar, ThumbsUp, Share2 } from 'lucide-react';
 import { useReadContract } from 'wagmi';
 
-import { formatAddress } from '../utils/format';
+import { formatAddress, formatDate } from '../utils/format';
 import MiniAppReview from '../artifacts/contracts/MiniAppReview.sol/MiniAppReview.json';
 import ReviewModal from '../components/ReviewModal';
 
@@ -127,7 +127,7 @@ const MiniAppDetail = () => {
                 <span>By {formatAddress(miniapp?.from)}</span>
                 <span className="text-gray-400">•</span>
                 <Calendar size={16} />
-                <span>Registered {Number(miniapp?.registeredAt)}</span>
+                <span>Registered {formatDate(miniapp?.registeredAt)}</span>
               </div>
 
               {/* Action Buttons */}
@@ -225,7 +225,7 @@ const MiniAppDetail = () => {
                             </div>
                             <div className="flex items-center gap-2 text-xs text-gray-500">
                               <Calendar size={12} />
-                              {review?.timestamp.toString()}
+                              {formatDate(review?.timestamp)}
                             </div>
                           </div>
                           <Rate disabled defaultValue={review?.rating.toString()} className="text-sm" />

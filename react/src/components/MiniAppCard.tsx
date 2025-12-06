@@ -79,11 +79,11 @@ function MiniAppCard({ id }: {id : BigInt }) {
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-2 mb-3">
             <div className="flex items-center gap-2">
               <span className="text-xs text-gray-600">Overall:</span>
-              <Rate disabled defaultValue={miniapp?.reviewCount} allowHalf className="text-xs" />
+              <Rate disabled defaultValue={Number(miniapp?.reviewCount)} allowHalf className="text-xs" />
             </div>
             <div className="flex items-center gap-2">
               <span className="text-xs text-gray-600">Quality:</span>
-              <Rate disabled defaultValue={miniapp?.reviewCount} allowHalf className="text-xs" />
+              <Rate disabled defaultValue={Number(miniapp?.reviewCount)} allowHalf className="text-xs" />
             </div>
           </div>
 
