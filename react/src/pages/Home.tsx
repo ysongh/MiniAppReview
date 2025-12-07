@@ -111,7 +111,7 @@ const Home = () => {
     address: import.meta.env.VITE_CONTRACT_ADDRESS,
     abi: MiniAppReview.abi,
     functionName: 'getAllApps'
-  });
+   }) as { data: BigInt[] | undefined };
 
   // Filter and sort apps
   const filteredApps = mockApps
@@ -194,7 +194,7 @@ const Home = () => {
 
         <div className="space-y-4">
           {miniappids.map((id) => (
-            <MiniAppCard  key={id} id={id} />
+            <MiniAppCard key={Number(id)} id={id} />
           ))}
         </div>
 

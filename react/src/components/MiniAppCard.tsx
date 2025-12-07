@@ -75,18 +75,6 @@ function MiniAppCard({ id }: {id : BigInt }) {
             <Tag color="purple">{miniapp?.category}</Tag>
           </div>
 
-          {/* Ratings breakdown */}
-          <div className="grid grid-cols-1 sm:grid-cols-2 gap-2 mb-3">
-            <div className="flex items-center gap-2">
-              <span className="text-xs text-gray-600">Overall:</span>
-              <Rate disabled defaultValue={Number(miniapp?.reviewCount)} allowHalf className="text-xs" />
-            </div>
-            <div className="flex items-center gap-2">
-              <span className="text-xs text-gray-600">Quality:</span>
-              <Rate disabled defaultValue={Number(miniapp?.reviewCount)} allowHalf className="text-xs" />
-            </div>
-          </div>
-
           {/* Developer and Actions */}
           <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-2">
             <div className="flex items-center gap-2 text-xs text-gray-500">
