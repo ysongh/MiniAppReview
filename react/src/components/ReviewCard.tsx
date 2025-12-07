@@ -1,6 +1,8 @@
 import { Rate, Tag, Button, Avatar, message } from 'antd';
 import { User, Calendar, ThumbsUp } from 'lucide-react';
+import { useWriteContract } from "wagmi";
 
+import MiniAppReview from '../artifacts/contracts/MiniAppReview.sol/MiniAppReview.json';
 import { formatAddress, formatDate } from '../utils/format';
 
 interface Review {
@@ -15,9 +17,16 @@ interface Review {
   registeredAt: bigint;
   wouldRecommend: boolean;
   recommendPercent: bigint;
+  helpfulCount: bigint
 }
 
-function ReviewCard({ id, review } : { id: number, review: Review }) {
+function ReviewCard({ id, appid, review } : { id: number, appid?: string, review: Review }) {
+  const {
+    writeContract,
+    data: txHash,
+    isPending
+  } = useWriteContract();
+
   const getDifficultyText = (difficulty: number) => {
     if (difficulty <= 2) return 'Easy';
     if (difficulty <= 3) return 'Medium';
@@ -30,7 +39,13 @@ function ReviewCard({ id, review } : { id: number, review: Review }) {
     return 'red';
   };
 
-  const handleMarkHelpful = (index: number) => {
+  const handleMarkHelpful = (id: number) => {
+    writeContract({
+      address: import.meta.env.VITE_CONTRACT_ADDRESS,
+      abi: MiniAppReview.abi,
+      functionName: "markReviewHelpful",
+      args: [appid, id]
+    })
     message.success('Marked as helpful!');
   };
 
@@ -76,7 +91,7 @@ function ReviewCard({ id, review } : { id: number, review: Review }) {
             icon={<ThumbsUp size={14} />}
             onClick={() => handleMarkHelpful(id)}
           >
-            Helpful
+            {Number(review.helpfulCount)} Helpful
           </Button>
         </div>
       </div>

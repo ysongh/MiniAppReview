@@ -213,7 +213,7 @@ const MiniAppDetail = () => {
 
               <div className="space-y-4">
                 {reviews.map((review, index) => (
-                  <ReviewCard key={index} id={index} review={review} />
+                  <ReviewCard key={index} id={index} appid={id} review={review} />
                 ))}
               </div>
 
