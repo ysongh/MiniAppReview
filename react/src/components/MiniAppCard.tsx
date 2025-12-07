@@ -1,6 +1,6 @@
 import { useNavigate } from 'react-router-dom';
-import { Card, Rate, Tag, Button, Space, Avatar } from 'antd';
-import { Grid3x3, Star, User, ExternalLink } from 'lucide-react';
+import { Card, Tag, Button, Space } from 'antd';
+import { Star, User, ExternalLink } from 'lucide-react';
 import { useReadContract } from 'wagmi';
 
 import MiniAppReview from '../artifacts/contracts/MiniAppReview.sol/MiniAppReview.json';
@@ -37,15 +37,6 @@ function MiniAppCard({ id }: {id : BigInt }) {
       bodyStyle={{ padding: '16px' }}
     >
       <div className="flex flex-col sm:flex-row gap-4">
-        {/* Icon */}
-        <div className="flex-shrink-0">
-          <Avatar
-            size={64}
-            icon={<Grid3x3 />}
-            className="bg-gradient-to-br from-purple-400 to-blue-500"
-          />
-        </div>
-
         {/* Content */}
         <div className="flex-1 min-w-0">
           <div className="flex flex-col sm:flex-row sm:items-start sm:justify-between gap-2 mb-2">
