@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Input, Select, Button, Card, message, Alert } from 'antd';
 import { Plus, Info, CheckCircle, ArrowLeft } from 'lucide-react';
-import { useWriteContract } from "wagmi";
+import { useWaitForTransactionReceipt, useWriteContract } from "wagmi";
 
 import MiniAppReview from '../artifacts/contracts/MiniAppReview.sol/MiniAppReview.json';
 
@@ -42,8 +42,12 @@ const RegisterMiniApp = () => {
   const {
     writeContract,
     data: txHash,
-    isPending
+    error
   } = useWriteContract();
+
+  const { isLoading: isConfirming, isSuccess } = useWaitForTransactionReceipt({
+    hash: txHash,
+  });
 
   const validateForm = () => {
     const newErrors: any = {};
@@ -105,8 +109,6 @@ const RegisterMiniApp = () => {
         registeredAt: new Date().toISOString(),
         developer: '0x1234...5678'
       });
-      
-      message.success('Mini app registered successfully!');
     } catch (error) {
       message.error('Failed to register app. Please try again.');
       console.error(error);
@@ -134,7 +136,21 @@ const RegisterMiniApp = () => {
     }
   };
 
-  if (registeredApp) {
+  if (isConfirming) {
+    message.loading('Confirming transaction...', 0);
+  }
+
+  if (isSuccess) {
+    message.destroy();
+    message.success('Mini app registered successfully!');
+  }
+
+  if (error) {
+    message.destroy();
+    message.error(`Error: ${error.message}`);
+  }
+
+  if (isSuccess) {
     return (
       <div className="min-h-screen bg-gradient-to-br from-purple-50 to-blue-50 p-4">
         <div className="max-w-2xl mx-auto pt-8">
@@ -182,6 +198,7 @@ const RegisterMiniApp = () => {
 
             <div className="flex flex-col sm:flex-row gap-3">
               <Button
+                onClick={() => navigate("/")}
                 type="primary"
                 size="large"
                 className="flex-1"
