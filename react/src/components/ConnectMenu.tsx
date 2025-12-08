@@ -45,7 +45,7 @@ const ConnectMenu = () => {
       ),
     },
     {
-      type: 'divider',
+      type: 'divider' as const,
     },
     {
       key: 'disconnect',

@@ -18,7 +18,6 @@ function ReviewModal({ id, reviewModalVisible, setReviewModalVisible } : { id?: 
   const {
     writeContract,
     data: txHash,
-    isPending
   } = useWriteContract();
 
   const handleSubmitReview = () => {
@@ -51,6 +50,8 @@ function ReviewModal({ id, reviewModalVisible, setReviewModalVisible } : { id?: 
       wouldRecommend: true
     });
   };
+
+  console.log(txHash);
 
   return (
     <Modal

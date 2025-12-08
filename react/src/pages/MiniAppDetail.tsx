@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
-import { Card, Rate, Tag, Button, Avatar, Progress, message, Empty } from 'antd';
+import { Card, Rate, Tag, Button, message, Empty } from 'antd';
 import { ArrowLeft, ExternalLink, Star, User, Calendar, Share2 } from 'lucide-react';
 import { useReadContract } from 'wagmi';
 
@@ -36,6 +36,7 @@ interface Review {
   registeredAt: bigint;
   wouldRecommend: boolean;
   recommendPercent: bigint;
+  helpfulCount: bigint
 }
 
 const MiniAppDetail = () => {
@@ -62,16 +63,6 @@ const MiniAppDetail = () => {
 
   const handleShare = () => {
     message.success('Link copied to clipboard!');
-  };
-
-  const getRatingDistribution = () => {
-    return [
-      { stars: 5, count: 89, percent: 69 },
-      { stars: 4, count: 28, percent: 22 },
-      { stars: 3, count: 8, percent: 6 },
-      { stars: 2, count: 2, percent: 2 },
-      { stars: 1, count: 1, percent: 1 }
-    ];
   };
 
   return (

@@ -24,7 +24,6 @@ function ReviewCard({ id, appid, review } : { id: number, appid?: string, review
   const {
     writeContract,
     data: txHash,
-    isPending
   } = useWriteContract();
 
   const getDifficultyText = (difficulty: number) => {
@@ -48,6 +47,8 @@ function ReviewCard({ id, appid, review } : { id: number, appid?: string, review
     })
     message.success('Marked as helpful!');
   };
+
+  console.log(txHash);
 
   return (
     <div className="border-b border-gray-200 last:border-0 pb-4 last:pb-0">
