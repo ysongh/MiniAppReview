@@ -159,72 +159,27 @@ const MiniAppDetail = () => {
           </div>
         </Card>
 
-        <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-          {/* Left Column - Stats */}
-          <div className="lg:col-span-1 space-y-6">
-            {/* Rating Breakdown */}
-            <Card title="Rating Distribution" className="shadow-lg">
-              <div className="space-y-3">
-                {getRatingDistribution().map((dist) => (
-                  <div key={dist.stars} className="flex items-center gap-3">
-                    <div className="flex items-center gap-1 w-16">
-                      <span className="text-sm font-medium">{dist.stars}</span>
-                      <Star size={14} className="text-yellow-500" fill="currentColor" />
-                    </div>
-                    <Progress 
-                      percent={dist.percent} 
-                      showInfo={false}
-                      strokeColor="#9333ea"
-                      className="flex-1"
-                    />
-                    <span className="text-sm text-gray-600 w-8 text-right">
-                      {dist.count}
-                    </span>
-                  </div>
-                ))}
-              </div>
-            </Card>
+        <div className="mt-2">
+          <Card className="shadow-lg">
+            <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 mb-6">
+              <h2 className="text-xl font-bold text-gray-900">
+                Reviews ({reviews?.length})
+              </h2>
+            </div>
 
-            {/* Developer Card */}
-            <Card title="Developer" className="shadow-lg">
-              <div className="flex items-center gap-3 mb-3">
-                <Avatar size={48} icon={<User />} className="bg-purple-500" />
-                <div>
-                  <div className="font-semibold text-gray-900">
-                    ?
-                  </div>
-                  <div className="text-xs text-gray-500 font-mono">
-                    {formatAddress(miniapp?.from)}
-                  </div>
-                </div>
-              </div>
-              <Button block size="small">View Profile</Button>
-            </Card>
-          </div>
+            <div className="space-y-4">
+              {reviews.map((review, index) => (
+                <ReviewCard key={index} id={index} appid={id} review={review} />
+              ))}
+            </div>
 
-          {/* Right Column - Reviews */}
-          <div className="lg:col-span-2">
-            <Card className="shadow-lg">
-              <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 mb-6">
-                <h2 className="text-xl font-bold text-gray-900">
-                  Reviews ({reviews?.length})
-                </h2>
-              </div>
-
-              <div className="space-y-4">
-                {reviews.map((review, index) => (
-                  <ReviewCard key={index} id={index} appid={id} review={review} />
-                ))}
-              </div>
-
-              {reviews?.length === 0 && (
-                <Empty
-                  description="No reviews yet. Be the first to review!"
-                  className="my-8"
-                />
-              )}
-            </Card>
-          </div>
+            {reviews?.length === 0 && (
+              <Empty
+                description="No reviews yet. Be the first to review!"
+                className="my-8"
+              />
+            )}
+          </Card>
         </div>
       </div>
 
