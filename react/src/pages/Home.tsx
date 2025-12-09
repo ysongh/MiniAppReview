@@ -10,94 +10,6 @@ import MiniAppReview from '../artifacts/contracts/MiniAppReview.sol/MiniAppRevie
 const { Search } = Input;
 const { Option } = Select;
 
-// Mock data
-const mockApps = [
-  {
-    id: 1,
-    name: "FarQuest",
-    description: "Complete daily quests and earn rewards on Farcaster",
-    category: "Gaming",
-    appUrl: "https://farquest.app",
-    developer: "0x1234...5678",
-    averageRating: 4.5,
-    reviewCount: 128,
-    recommendPercent: 92,
-    isActive: true,
-    difficulty: 2,
-    quality: 4.8
-  },
-  {
-    id: 2,
-    name: "CastVault",
-    description: "Secure your casts with encrypted storage and backup",
-    category: "Tools",
-    appUrl: "https://castvault.app",
-    developer: "0xabcd...efgh",
-    averageRating: 4.8,
-    reviewCount: 89,
-    recommendPercent: 95,
-    isActive: true,
-    difficulty: 3,
-    quality: 4.9
-  },
-  {
-    id: 3,
-    name: "NFT Showcase",
-    description: "Display your NFT collection in your Farcaster profile",
-    category: "NFT",
-    appUrl: "https://nftshowcase.app",
-    developer: "0x9876...4321",
-    averageRating: 4.2,
-    reviewCount: 234,
-    recommendPercent: 88,
-    isActive: true,
-    difficulty: 1,
-    quality: 4.3
-  },
-  {
-    id: 4,
-    name: "FarSwap",
-    description: "Trade tokens directly in Farcaster frames",
-    category: "DeFi",
-    appUrl: "https://farswap.app",
-    developer: "0xdef0...1234",
-    averageRating: 4.6,
-    reviewCount: 456,
-    recommendPercent: 91,
-    isActive: true,
-    difficulty: 2,
-    quality: 4.7
-  },
-  {
-    id: 5,
-    name: "SocialGraph",
-    description: "Visualize your Farcaster social connections",
-    category: "Social",
-    appUrl: "https://socialgraph.app",
-    developer: "0x5555...6666",
-    averageRating: 4.0,
-    reviewCount: 67,
-    recommendPercent: 85,
-    isActive: true,
-    difficulty: 2,
-    quality: 4.1
-  },
-  {
-    id: 6,
-    name: "CastAnalytics",
-    description: "Deep analytics for your casts and engagement",
-    category: "Tools",
-    appUrl: "https://castanalytics.app",
-    developer: "0x7777...8888",
-    averageRating: 4.7,
-    reviewCount: 193,
-    recommendPercent: 94,
-    isActive: true,
-    difficulty: 2,
-    quality: 4.8
-  }
-];
-
 const categories = ["All", "Social", "DeFi", "NFT", "Gaming", "Tools", "Media"];
 
 const Home = () => {
@@ -112,21 +24,6 @@ const Home = () => {
     abi: MiniAppReview.abi,
     functionName: 'getAllApps'
    }) as { data: BigInt[] | undefined };
-
-  // Filter and sort apps
-  const filteredApps = mockApps
-    .filter(app => {
-      const matchesSearch = app.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
-                           app.description.toLowerCase().includes(searchTerm.toLowerCase());
-      const matchesCategory = selectedCategory === 'All' || app.category === selectedCategory;
-      return matchesSearch && matchesCategory;
-    })
-    .sort((a, b) => {
-      if (sortBy === 'rating') return b.averageRating - a.averageRating;
-      if (sortBy === 'reviews') return b.reviewCount - a.reviewCount;
-      if (sortBy === 'name') return a.name.localeCompare(b.name);
-      return 0;
-    });
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-purple-50 to-blue-50">
@@ -176,20 +73,22 @@ const Home = () => {
               <Option value="name">Name (A-Z)</Option>
             </Select>
           </div>
+
+           <Button
+              onClick={() => navigate("/register")}
+              type="primary"
+              className="mt-3"
+            >
+              Register Mini App
+            </Button>
         </div>
       </div>
 
       {/* App List */}
       <div className="max-w-7xl mx-auto px-4 pb-8 mt-2">
         <div className="text-sm text-gray-600 mb-4">
-          Showing {filteredApps.length} {filteredApps.length === 1 ? 'app' : 'apps'}
-           <Button
-              onClick={() => navigate("/register")}
-              type="primary"
-              className="ml-4"
-            >
-              Register Mini App
-            </Button>
+          Showing {miniappids.length} {miniappids.length === 1 ? 'app' : 'apps'}
+          
         </div>
 
         <div className="space-y-4">
@@ -198,7 +97,7 @@ const Home = () => {
           ))}
         </div>
 
-        {filteredApps.length === 0 && (
+        {miniappids.length === 0 && (
           <div className="text-center py-12">
             <Grid3x3 className="text-gray-300 mb-4 mx-auto" size={64} />
             <h3 className="text-lg font-semibold text-gray-600">No apps found</h3>
