@@ -2,18 +2,19 @@ import { useState } from 'react';
 import { Link } from 'react-router-dom';
 import { Button, Avatar, Dropdown } from 'antd';
 import { Grid3x3, Plus, Star, User, Menu, X, Wallet, LogOut, Settings } from 'lucide-react';
-import { useAccount, useConnect } from "wagmi";
+import { useAccount, useConnect, useDisconnect } from "wagmi";
 
 import { formatAddress } from '../utils/format';
 
 const ConnectMenu = () => {
   const { isConnected, address } = useAccount();
   const { connect, connectors } = useConnect();
+  const { disconnect } = useDisconnect();
 
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
 
   const disconnectWallet = () => {
-   
+    disconnect()
   };
 
   const userMenuItems = [
