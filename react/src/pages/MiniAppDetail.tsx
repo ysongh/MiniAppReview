@@ -3,6 +3,7 @@ import { useParams, useNavigate } from 'react-router-dom';
 import { Card, Rate, Tag, Button, message, Empty } from 'antd';
 import { ArrowLeft, ExternalLink, Star, User, Calendar, Share2 } from 'lucide-react';
 import { useReadContract } from 'wagmi';
+import { sdk } from '@farcaster/frame-sdk';
 
 import { formatAddress, formatDate } from '../utils/format';
 import MiniAppReview from '../artifacts/contracts/MiniAppReview.sol/MiniAppReview.json';
@@ -61,8 +62,25 @@ const MiniAppDetail = () => {
 
   console.log(reviews);
 
-  const handleShare = () => {
-    message.success('Link copied to clipboard!');
+  const handleShare = async () => {
+    try {
+      const result = await sdk.actions.composeCast({
+        text: 'Check out my mini app🎉',
+        embeds: ["https://miniappreview.netlify.app/#/app/" + id],
+        // Optional: parent cast reference
+        // parent: { type: 'cast', hash: '0xabc123...' },
+        // Optional: close the app after composing
+        // close: true,
+      });
+  
+      if (result) {
+        console.log('Cast composed:', result.cast);
+      } else {
+        console.log('Cast composition was closed or canceled.');
+      }
+    } catch (error) {
+      console.error('Error composing cast:', error);
+    }
   };
 
   return (
