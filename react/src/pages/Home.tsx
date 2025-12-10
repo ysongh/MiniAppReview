@@ -1,13 +1,12 @@
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { Input, Select, Button } from 'antd';
-import { Search as SearchIcon, Grid3x3, Filter } from 'lucide-react';
+import { Select, Button } from 'antd';
+import { Grid3x3, Filter } from 'lucide-react';
 import { useReadContract } from 'wagmi';
 
 import MiniAppCard from '../components/MiniAppCard';
 import MiniAppReview from '../artifacts/contracts/MiniAppReview.sol/MiniAppReview.json';
 
-const { Search } = Input;
 const { Option } = Select;
 
 const categories = ["All", "Social", "DeFi", "NFT", "Gaming", "Tools", "Media"];
@@ -15,9 +14,7 @@ const categories = ["All", "Social", "DeFi", "NFT", "Gaming", "Tools", "Media"];
 const Home = () => {
   const navigate = useNavigate();
 
-  const [searchTerm, setSearchTerm] = useState('');
   const [selectedCategory, setSelectedCategory] = useState('All');
-  const [sortBy, setSortBy] = useState('rating');
 
   const { data: miniappids = [] } = useReadContract({
     address: import.meta.env.VITE_CONTRACT_ADDRESS,
@@ -45,16 +42,6 @@ const Home = () => {
             </div>
           </div>
 
-          {/* Search */}
-          <Search
-            placeholder="Search apps..."
-            prefix={<SearchIcon size={16} />}
-            value={searchTerm}
-            onChange={(e) => setSearchTerm(e.target.value)}
-            className="mb-3"
-            size="large"
-          />
-
           {/* Filters */}
           <div className="flex flex-col sm:flex-row gap-2">
             <Select
@@ -67,17 +54,6 @@ const Home = () => {
               {categories.map(cat => (
                 <Option key={cat} value={cat}>{cat}</Option>
               ))}
-            </Select>
-
-            <Select
-              value={sortBy}
-              onChange={setSortBy}
-              className="w-full sm:w-48"
-              size="large"
-            >
-              <Option value="rating">Top Rated</Option>
-              <Option value="reviews">Most Reviews</Option>
-              <Option value="name">Name (A-Z)</Option>
             </Select>
           </div>
 
