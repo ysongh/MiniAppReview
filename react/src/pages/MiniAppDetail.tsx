@@ -1,9 +1,9 @@
 import { useState } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
-import { Card, Rate, Tag, Button, message, Empty } from 'antd';
+import { Card, Rate, Tag, Button, Empty } from 'antd';
 import { ArrowLeft, ExternalLink, Star, User, Calendar, Share2 } from 'lucide-react';
 import { useReadContract } from 'wagmi';
-import { sdk } from '@farcaster/frame-sdk';
+import { sdk } from '@farcaster/miniapp-sdk';
 
 import { formatAddress, formatDate } from '../utils/format';
 import MiniAppReview from '../artifacts/contracts/MiniAppReview.sol/MiniAppReview.json';
