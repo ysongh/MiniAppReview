@@ -25,6 +25,13 @@ const Home = () => {
     functionName: 'getAllApps'
    }) as { data: BigInt[] | undefined };
 
+  const { data: filterminiappids = [] } = useReadContract({
+    address: import.meta.env.VITE_CONTRACT_ADDRESS,
+    abi: MiniAppReview.abi,
+    functionName: 'getAppsByCategory',
+    args: [selectedCategory]
+  }) as { data: bigint[] | undefined };
+
   return (
     <div className="min-h-screen bg-gradient-to-br from-purple-50 to-blue-50">
       {/* Header */}
@@ -92,7 +99,9 @@ const Home = () => {
         </div>
 
         <div className="space-y-4">
-          {miniappids.map((id) => (
+          {selectedCategory === "All" ? miniappids.map((id) => (
+            <MiniAppCard key={Number(id)} id={id} />
+          )) : filterminiappids.map((id) => (
             <MiniAppCard key={Number(id)} id={id} />
           ))}
         </div>
