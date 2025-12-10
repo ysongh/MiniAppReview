@@ -35,10 +35,8 @@ const Home = () => {
       <div className="bg-white shadow-sm sticky top-0 z-10">
         <div className="max-w-7xl mx-auto px-4 py-4">
           <div className="flex items-center gap-3 mb-4">
-            <Grid3x3 className="text-3xl text-purple-600" size={32} />
             <div>
-              <h1 className="text-2xl font-bold text-gray-900 m-0">Farcaster Mini Apps</h1>
-              <p className="text-sm text-gray-500 m-0">Discover and rate the best apps</p>
+              <h1 className="text-2xl font-bold text-gray-900 m-0">Discover and rate the best apps</h1>
             </div>
           </div>
 
