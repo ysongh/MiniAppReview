@@ -88,17 +88,6 @@ const Home = () => {
           </div>
         )}
       </div>
-
-      {/* Floating Action Button for Mobile */}
-      <div className="fixed bottom-6 right-6 sm:hidden">
-        <Button
-          type="primary"
-          shape="circle"
-          size="large"
-          icon={<Grid3x3 size={24} />}
-          className="w-14 h-14 shadow-lg"
-        />
-      </div>
     </div>
   );
 };
