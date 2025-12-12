@@ -29,6 +29,8 @@ const Home = () => {
     args: [selectedCategory]
   }) as { data: bigint[] | undefined };
 
+  const sortIds = miniappids.slice().reverse();
+
   return (
     <div className="min-h-screen bg-gradient-to-br from-purple-50 to-blue-50">
       {/* Header */}
@@ -73,7 +75,7 @@ const Home = () => {
         </div>
 
         <div className="space-y-4">
-          {selectedCategory === "All" ? miniappids.map((id) => (
+          {selectedCategory === "All" ? sortIds.map((id) => (
             <MiniAppCard key={Number(id)} id={id} />
           )) : filterminiappids.map((id) => (
             <MiniAppCard key={Number(id)} id={id} />
