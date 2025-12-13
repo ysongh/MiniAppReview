@@ -16,6 +16,7 @@ interface MiniApp {
   averageRating: bigint;
   reviewCount: bigint;
   isActive: boolean;
+  totalRating: bigint;
   recommendPercent: bigint;
 }
 
@@ -53,7 +54,7 @@ function MiniAppCard({ id }: {id : BigInt }) {
             <div className="flex items-center gap-2 sm:flex-col sm:items-end flex-shrink-0">
               <div className="flex items-center gap-1">
                 <Star className="text-yellow-500" size={18} fill="currentColor" />
-                <span className="text-xl font-bold">{Number(miniapp?.reviewCount)}</span>
+                <span className="text-xl font-bold">{Number(miniapp?.totalRating)}</span>
               </div>
               <span className="text-xs text-gray-500">
                 {Number(miniapp?.reviewCount)} reviews
