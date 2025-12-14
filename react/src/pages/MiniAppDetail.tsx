@@ -65,7 +65,7 @@ const MiniAppDetail = () => {
   const handleShare = async () => {
     try {
       const result = await sdk.actions.composeCast({
-        text: 'Check out my mini app🎉',
+        text: `Check out ${miniapp?.name}.  What do you think? Feel free to leave a review`,
         embeds: ["https://miniappreview.netlify.app/#/app/" + id],
         // Optional: parent cast reference
         // parent: { type: 'cast', hash: '0xabc123...' },
