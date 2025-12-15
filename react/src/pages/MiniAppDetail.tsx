@@ -1,8 +1,8 @@
 import { useState } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
-import { Card, Rate, Tag, Button, Empty } from 'antd';
+import { Card, Rate, Tag, Button, Empty, message } from 'antd';
 import { ArrowLeft, ExternalLink, Star, User, Calendar, Share2 } from 'lucide-react';
-import { useReadContract } from 'wagmi';
+import { useReadContract, useWriteContract, useWaitForTransactionReceipt } from 'wagmi';
 import { sdk } from '@farcaster/miniapp-sdk';
 
 import { formatAddress, formatDate } from '../utils/format';
@@ -58,8 +58,17 @@ const MiniAppDetail = () => {
     abi: MiniAppReview.abi,
     functionName: 'getAppReviews',
     args: [id]
- }) as { data: Review[] | undefined };
+  }) as { data: Review[] | undefined };
 
+  const {
+     writeContract,
+     data: txHash,
+     error
+   } = useWriteContract();
+ 
+   const { isLoading: isConfirming, isSuccess } = useWaitForTransactionReceipt({
+     hash: txHash,
+   });
   console.log(reviews);
 
   const handleShare = async () => {
@@ -82,6 +91,21 @@ const MiniAppDetail = () => {
       console.error('Error composing cast:', error);
     }
   };
+
+   if (isConfirming) {
+    message.loading('Confirming transaction...', 0);
+  }
+
+  if (isSuccess) {
+    message.destroy();
+    message.success('Review submitted successfully!');
+    
+  }
+
+  if (error) {
+    message.destroy();
+    message.error(`Error: ${error.message}`);
+  }
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-purple-50 to-blue-50">
@@ -195,6 +219,7 @@ const MiniAppDetail = () => {
       {/* Review Modal */}
       <ReviewModal
         id={id}
+        writeContract={writeContract}
         reviewModalVisible={reviewModalVisible}
         setReviewModalVisible={setReviewModalVisible} />
     </div>
