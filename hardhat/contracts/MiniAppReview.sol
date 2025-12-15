@@ -4,7 +4,7 @@ pragma solidity ^0.8.19;
 /**
  * @title MiniAppReview
  * @dev A smart contract for rating and reviewing Farcaster mini-apps
- * Similar to RateMyProfessor but for Farcaster apps
+ * Similar to RateMyProfessor but for Farcaster apps with comment threads
  */
 contract MiniAppReview {
     
@@ -32,6 +32,14 @@ contract MiniAppReview {
         bool wouldRecommend;        // Would you recommend this app?
         uint256 timestamp;
         uint256 helpfulCount;       // How many found this helpful
+        uint256 commentCount;       // Number of comments on this review
+    }
+    
+    // Comment structure for review discussions
+    struct ReviewComment {
+        address commenter;
+        string comment;
+        uint256 timestamp;
     }
     
     // Contract owner
@@ -40,6 +48,7 @@ contract MiniAppReview {
     // Storage
     mapping(uint256 => App) public apps;
     mapping(uint256 => Review[]) public appReviews;
+    mapping(uint256 => mapping(uint256 => ReviewComment[])) public reviewComments; // appId => reviewIndex => comments
     mapping(uint256 => mapping(address => bool)) public hasReviewed;
     mapping(uint256 => mapping(address => uint256)) public reviewIndex;
     mapping(uint256 => mapping(address => mapping(address => bool))) public hasMarkedHelpful;
@@ -56,6 +65,7 @@ contract MiniAppReview {
     event ReviewSubmitted(uint256 indexed appId, address indexed reviewer, uint256 rating);
     event ReviewUpdated(uint256 indexed appId, address indexed reviewer);
     event ReviewMarkedHelpful(uint256 indexed appId, uint256 reviewIndex, address marker);
+    event ReviewCommentAdded(uint256 indexed appId, uint256 indexed reviewIndex, address commenter);
     event AppStatusChanged(uint256 indexed appId, bool isActive);
     
     // Modifiers
@@ -71,6 +81,11 @@ contract MiniAppReview {
     
     modifier validRating(uint256 _rating) {
         require(_rating >= 1 && _rating <= 5, "Rating must be 1-5");
+        _;
+    }
+    
+    modifier reviewExists(uint256 _appId, uint256 _reviewIndex) {
+        require(_reviewIndex < appReviews[_appId].length, "Review does not exist");
         _;
     }
     
@@ -154,7 +169,8 @@ contract MiniAppReview {
                 quality: _quality,
                 wouldRecommend: _wouldRecommend,
                 timestamp: block.timestamp,
-                helpfulCount: 0
+                helpfulCount: 0,
+                commentCount: 0
             }));
             
             reviewIndex[_appId][msg.sender] = appReviews[_appId].length - 1;
@@ -165,6 +181,39 @@ contract MiniAppReview {
             
             emit ReviewSubmitted(_appId, msg.sender, _rating);
         }
+    }
+    
+    /**
+     * @dev Add a comment to a review
+     */
+    function addReviewComment(
+        uint256 _appId,
+        uint256 _reviewIndex,
+        string memory _comment
+    ) external appExists(_appId) reviewExists(_appId, _reviewIndex) {
+        require(bytes(_comment).length > 0, "Comment cannot be empty");
+        require(bytes(_comment).length <= 500, "Comment too long");
+        
+        reviewComments[_appId][_reviewIndex].push(ReviewComment({
+            commenter: msg.sender,
+            comment: _comment,
+            timestamp: block.timestamp
+        }));
+        
+        // Increment comment count on the review
+        appReviews[_appId][_reviewIndex].commentCount++;
+        
+        emit ReviewCommentAdded(_appId, _reviewIndex, msg.sender);
+    }
+    
+    /**
+     * @dev Get all comments for a specific review
+     */
+    function getReviewComments(
+        uint256 _appId,
+        uint256 _reviewIndex
+    ) external view appExists(_appId) reviewExists(_appId, _reviewIndex) returns (ReviewComment[] memory) {
+        return reviewComments[_appId][_reviewIndex];
     }
     
     /**
@@ -182,7 +231,7 @@ contract MiniAppReview {
     }
     
     /**
-     * @dev Update app details (developer only)
+     * @dev Update app details (poster only)
      */
     function updateApp(
         uint256 _appId,
@@ -233,7 +282,7 @@ contract MiniAppReview {
     }
 
     /**
-     * @dev Get all reviews for an app
+     * @dev Get app detail
      */
     function getAppDetail(uint256 _appId) external view appExists(_appId) returns (App memory) {
         return apps[_appId];
@@ -318,8 +367,8 @@ contract MiniAppReview {
         return result;
     }
     
-    function getPosterPost(address _developer) external view returns (uint256[] memory) {
-        return posterPost[_developer];
+    function getPosterPost(address _poster) external view returns (uint256[] memory) {
+        return posterPost[_poster];
     }
     
     function addCategory(string memory _category) external onlyOwner {
