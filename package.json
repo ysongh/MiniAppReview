@@ -1,0 +1,13 @@
+{
+  "name": "miniappreview",
+  "version": "1.0.0",
+  "description": "",
+  "scripts": {
+    "node": "cd hardhat && npx hardhat node",
+    "deploylocal": "cd hardhat && npx hardhat ignition deploy ./ignition/modules/MiniAppReview.ts --network localhost",
+    "client": "cd react && pnpm dev"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC"
+}
