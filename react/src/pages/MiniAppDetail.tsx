@@ -9,6 +9,7 @@ import { formatAddress, formatDate } from '../utils/format';
 import MiniAppReview from '../artifacts/contracts/MiniAppReview.sol/MiniAppReview.json';
 import ReviewCard from '../components/ReviewCard';
 import ReviewModal from '../components/ReviewModal';
+import CommentModal from '../components/CommentModal';
 
 interface MiniApp {
   name: string;
@@ -45,6 +46,8 @@ const MiniAppDetail = () => {
   const navigate = useNavigate();
 
   const [reviewModalVisible, setReviewModalVisible] = useState(false);
+  const [commentModalVisible, setCommentModalVisible] = useState(false);
+  const [selectedReviewIndex, setSelectedReviewIndex] = useState<number | null>(null);
 
   const { data: miniapp } = useReadContract({
     address: import.meta.env.VITE_CONTRACT_ADDRESS,
@@ -70,6 +73,11 @@ const MiniAppDetail = () => {
      hash: txHash,
    });
   console.log(reviews);
+
+  const handleOpenCommentModal = (reviewIndex: number) => {
+    setSelectedReviewIndex(reviewIndex);
+    setCommentModalVisible(true);
+  };
 
   const handleShare = async () => {
     try {
@@ -202,7 +210,13 @@ const MiniAppDetail = () => {
 
             <div className="space-y-4">
               {reviews.map((review, index) => (
-                <ReviewCard key={index} id={index} appid={id} review={review} />
+                <ReviewCard
+                  key={index}
+                  id={index}
+                  appid={id}
+                  review={review}
+                  handleOpenCommentModal={handleOpenCommentModal}
+                />
               ))}
             </div>
 
@@ -222,6 +236,15 @@ const MiniAppDetail = () => {
         writeContract={writeContract}
         reviewModalVisible={reviewModalVisible}
         setReviewModalVisible={setReviewModalVisible} />
+
+      {/* Comment Modal */}
+      <CommentModal
+        id={id}
+        writeContract={writeContract}
+        commentModalVisible={commentModalVisible}
+        setCommentModalVisible={setCommentModalVisible}
+        selectedReviewIndex={selectedReviewIndex}
+        setSelectedReviewIndex={setSelectedReviewIndex} />
     </div>
   );
 };

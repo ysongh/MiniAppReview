@@ -1,5 +1,5 @@
 import { Rate, Tag, Button, Avatar, message } from 'antd';
-import { User, Calendar, ThumbsUp } from 'lucide-react';
+import { User, Calendar, MessageCircle, ThumbsUp } from 'lucide-react';
 import { useWriteContract } from "wagmi";
 
 import MiniAppReview from '../artifacts/contracts/MiniAppReview.sol/MiniAppReview.json';
@@ -20,7 +20,7 @@ interface Review {
   helpfulCount: bigint
 }
 
-function ReviewCard({ id, appid, review } : { id: number, appid?: string, review: Review }) {
+function ReviewCard({ id, appid, review, handleOpenCommentModal } : { id: number, appid?: string, review: Review, handleOpenCommentModal: Function }) {
   const {
     writeContract,
     data: txHash,
@@ -87,13 +87,22 @@ function ReviewCard({ id, appid, review } : { id: number, appid?: string, review
             {review.comment}
           </p>
 
-          <Button
-            size="small"
-            icon={<ThumbsUp size={14} />}
-            onClick={() => handleMarkHelpful(id)}
-          >
-            {Number(review.helpfulCount)} Helpful
-          </Button>
+          <div className="flex gap-2 mb-3">
+            <Button
+              size="small"
+              icon={<ThumbsUp size={14} />}
+              onClick={() => handleMarkHelpful(id)}
+            >
+              {Number(review.helpfulCount)} Helpful
+            </Button>
+            <Button
+              size="small"
+              icon={<MessageCircle size={14} />}
+              onClick={() => handleOpenCommentModal(id)}
+            >
+              Comment
+            </Button>
+          </div>
         </div>
       </div>
     </div>
