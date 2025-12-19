@@ -1,6 +1,6 @@
 import { Rate, Tag, Button, Avatar, message } from 'antd';
 import { User, Calendar, MessageCircle, ThumbsUp } from 'lucide-react';
-import { useWriteContract } from "wagmi";
+import { useReadContract, useWriteContract } from "wagmi";
 
 import MiniAppReview from '../artifacts/contracts/MiniAppReview.sol/MiniAppReview.json';
 import { formatAddress, formatDate } from '../utils/format';
@@ -20,7 +20,20 @@ interface Review {
   helpfulCount: bigint
 }
 
+interface Comment {
+  comment: string;
+  commenter: string;
+  timestamp: bigint;
+}
+
 function ReviewCard({ id, appid, review, handleOpenCommentModal } : { id: number, appid?: string, review: Review, handleOpenCommentModal: Function }) {
+  const { data: comments = [] } = useReadContract({
+    address: import.meta.env.VITE_CONTRACT_ADDRESS,
+    abi: MiniAppReview.abi,
+    functionName: 'getReviewComments',
+    args: [appid, id]
+  }) as { data: Comment[] | undefined };
+  
   const {
     writeContract,
     data: txHash,
@@ -48,7 +61,7 @@ function ReviewCard({ id, appid, review, handleOpenCommentModal } : { id: number
     message.success('Marked as helpful!');
   };
 
-  console.log(txHash);
+  console.log(txHash, comments);
 
   return (
     <div className="border-b border-gray-200 last:border-0 pb-4 last:pb-0">
@@ -103,6 +116,29 @@ function ReviewCard({ id, appid, review, handleOpenCommentModal } : { id: number
               Comment
             </Button>
           </div>
+
+          {comments?.length > 0 && (
+            <div className="ml-8 mt-3 space-y-3 border-l-2 border-gray-200 pl-4">
+              {comments?.map((comment, commentIndex) => (
+                <div key={commentIndex} className="flex gap-2">
+                  <Avatar size={32} icon={<User />} className="bg-gray-400 flex-shrink-0" />
+                  <div className="flex-1">
+                    <div className="flex items-center gap-2 mb-1">
+                      <span className="font-semibold text-sm text-gray-900">
+                        {formatAddress(comment?.commenter)}
+                      </span>
+                      <span className="text-xs text-gray-500">
+                        {formatDate(comment?.timestamp)}
+                      </span>
+                    </div>
+                    <p className="text-sm text-gray-700">
+                      {comment?.comment}
+                    </p>
+                  </div>
+                </div>
+              ))}
+            </div>
+          )}
         </div>
       </div>
     </div>
