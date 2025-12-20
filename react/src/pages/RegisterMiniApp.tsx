@@ -117,18 +117,6 @@ const RegisterMiniApp = () => {
     }
   };
 
-  const handleReset = () => {
-    setFormData({
-      name: '',
-      description: '',
-      category: '',
-      appUrl: '',
-      developerInfo: ''
-    });
-    setErrors({});
-    setRegisteredApp(null);
-  };
-
   const handleInputChange = (field: string, value: string) => {
     setFormData(prev => ({ ...prev, [field]: value }));
     if (errors[field]) {
@@ -196,23 +184,14 @@ const RegisterMiniApp = () => {
               className="mb-4"
             />
 
-            <div className="flex flex-col sm:flex-row gap-3">
-              <Button
-                onClick={() => navigate("/")}
-                type="primary"
-                size="large"
-                className="flex-1"
-              >
-                View in Gallery
-              </Button>
-              <Button
-                size="large"
-                className="flex-1"
-                onClick={handleReset}
-              >
-                Register Another App
-              </Button>
-            </div>
+            <Button
+              onClick={() => navigate("/")}
+              type="primary"
+              size="large"
+              className="mt-2 w-full"
+            >
+              View in Gallery
+            </Button>
           </Card>
         </div>
       </div>
