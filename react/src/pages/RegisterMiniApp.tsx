@@ -170,7 +170,7 @@ const RegisterMiniApp = () => {
                 <div>
                   <span className="text-sm font-semibold text-gray-700">Transaction ID:</span>
                   <p className="text-gray-900 font-mono text-sm">
-                    0x{Math.random().toString(16).substr(2, 40)}
+                    {txHash}
                   </p>
                 </div>
               </div>
