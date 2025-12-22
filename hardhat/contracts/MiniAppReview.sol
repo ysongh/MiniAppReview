@@ -27,8 +27,6 @@ contract MiniAppReview {
         address reviewer;
         uint256 rating;             // 1-5 stars
         string comment;             // Written review
-        uint256 difficulty;         // 1-5 (how easy to use)
-        uint256 quality;            // 1-5 (quality rating)
         bool wouldRecommend;        // Would you recommend this app?
         uint256 timestamp;
         uint256 helpfulCount;       // How many found this helpful
@@ -136,10 +134,8 @@ contract MiniAppReview {
         uint256 _appId,
         uint256 _rating,
         string memory _comment,
-        uint256 _difficulty,
-        uint256 _quality,
         bool _wouldRecommend
-    ) external appExists(_appId) validRating(_rating) validRating(_difficulty) validRating(_quality) {
+    ) external appExists(_appId) validRating(_rating) {
         App storage app = apps[_appId];
         require(app.isActive, "App not active");
         
@@ -153,8 +149,6 @@ contract MiniAppReview {
             
             review.rating = _rating;
             review.comment = _comment;
-            review.difficulty = _difficulty;
-            review.quality = _quality;
             review.wouldRecommend = _wouldRecommend;
             review.timestamp = block.timestamp;
             
@@ -165,8 +159,6 @@ contract MiniAppReview {
                 reviewer: msg.sender,
                 rating: _rating,
                 comment: _comment,
-                difficulty: _difficulty,
-                quality: _quality,
                 wouldRecommend: _wouldRecommend,
                 timestamp: block.timestamp,
                 helpfulCount: 0,

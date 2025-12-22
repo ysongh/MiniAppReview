@@ -8,8 +8,6 @@ const { TextArea } = Input;
 function ReviewModal({ id, writeContract, reviewModalVisible, setReviewModalVisible } : { id?: string, writeContract: Function, reviewModalVisible: boolean, setReviewModalVisible: Function }) {
   const [reviewForm, setReviewForm] = useState({
     rating: 0,
-    difficulty: 0,
-    quality: 0,
     comment: '',
     wouldRecommend: true
   });
@@ -28,8 +26,6 @@ function ReviewModal({ id, writeContract, reviewModalVisible, setReviewModalVisi
         id,
         reviewForm.rating,
         reviewForm.comment,
-        reviewForm.difficulty,
-        reviewForm.quality,
         reviewForm.wouldRecommend
       ]
     });
@@ -37,8 +33,6 @@ function ReviewModal({ id, writeContract, reviewModalVisible, setReviewModalVisi
     setReviewModalVisible(false);
     setReviewForm({
       rating: 0,
-      difficulty: 0,
-      quality: 0,
       comment: '',
       wouldRecommend: true
     });
@@ -55,36 +49,13 @@ function ReviewModal({ id, writeContract, reviewModalVisible, setReviewModalVisi
       <div className="space-y-4">
         <div>
           <label className="block font-semibold text-gray-700 mb-2">
-            Overall Rating <span className="text-red-500">*</span>
+            Rating <span className="text-red-500">*</span>
           </label>
           <Rate
             value={reviewForm.rating}
             onChange={(value) => setReviewForm({...reviewForm, rating: value})}
             className="text-2xl"
           />
-        </div>
-
-        <div>
-          <label className="block font-semibold text-gray-700 mb-2">
-            Quality
-          </label>
-          <Rate
-            value={reviewForm.quality}
-            onChange={(value) => setReviewForm({...reviewForm, quality: value})}
-          />
-        </div>
-
-        <div>
-          <label className="block font-semibold text-gray-700 mb-2">
-            Difficulty
-          </label>
-          <Rate
-            value={reviewForm.difficulty}
-            onChange={(value) => setReviewForm({...reviewForm, difficulty: value})}
-          />
-          <div className="text-xs text-gray-500 mt-1">
-            1 = Very Easy, 5 = Very Difficult
-          </div>
         </div>
 
         <div>

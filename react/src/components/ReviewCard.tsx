@@ -10,9 +10,7 @@ interface Review {
   comment: string;
   reviewer: string;
   appUrl: string;
-  difficulty: number;
   timestamp: bigint;
-  quality: bigint;
   rating: bigint;
   registeredAt: bigint;
   wouldRecommend: boolean;
@@ -38,18 +36,6 @@ function ReviewCard({ id, appid, review, handleOpenCommentModal } : { id: number
     writeContract,
     data: txHash,
   } = useWriteContract();
-
-  const getDifficultyText = (difficulty: number) => {
-    if (difficulty <= 2) return 'Easy';
-    if (difficulty <= 3) return 'Medium';
-    return 'Advanced';
-  };
-
-  const getDifficultyColor = (difficulty: number) => {
-    if (difficulty <= 2) return 'green';
-    if (difficulty <= 3) return 'orange';
-    return 'red';
-  };
 
   const handleMarkHelpful = (id: number) => {
     writeContract({
@@ -82,12 +68,6 @@ function ReviewCard({ id, appid, review, handleOpenCommentModal } : { id: number
           </div>
 
           <div className="flex gap-2 mb-2">
-            <Tag color="blue" className="text-xs">
-              Quality: {Number(review?.quality)}/5
-            </Tag>
-            <Tag color={getDifficultyColor(review.difficulty)} className="text-xs">
-              {getDifficultyText(Number(review?.difficulty))}
-            </Tag>
             {review.wouldRecommend && (
               <Tag color="green" className="text-xs">
                 <ThumbsUp size={10} className="inline mr-1" />
