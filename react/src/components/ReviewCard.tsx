@@ -1,6 +1,7 @@
+import { useEffect } from 'react';
 import { Rate, Tag, Button, Avatar, message } from 'antd';
 import { User, Calendar, MessageCircle, ThumbsUp } from 'lucide-react';
-import { useReadContract, useWriteContract } from "wagmi";
+import { useBlockNumber, useReadContract, useWriteContract } from "wagmi";
 
 import MiniAppReview from '../artifacts/contracts/MiniAppReview.sol/MiniAppReview.json';
 import { formatAddress, formatDate } from '../utils/format';
@@ -25,12 +26,18 @@ interface Comment {
 }
 
 function ReviewCard({ id, appid, review, handleOpenCommentModal } : { id: number, appid?: string, review: Review, handleOpenCommentModal: Function }) {
-  const { data: comments = [] } = useReadContract({
+  const { data: blockNumber } = useBlockNumber({ watch: true });
+
+  const { data: comments = [], refetch: commentsRefetch } = useReadContract({
     address: import.meta.env.VITE_CONTRACT_ADDRESS,
     abi: MiniAppReview.abi,
     functionName: 'getReviewComments',
     args: [appid, id]
-  }) as { data: Comment[] | undefined };
+  }) as { data: Comment[] | undefined, refetch: () => void  };
+
+  useEffect(() => {
+    commentsRefetch();
+  }, [blockNumber])
   
   const {
     writeContract,

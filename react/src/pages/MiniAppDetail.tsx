@@ -1,8 +1,8 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { Card, Rate, Tag, Button, Empty, message } from 'antd';
 import { ArrowLeft, ExternalLink, Star, User, Calendar, Share2 } from 'lucide-react';
-import { useReadContract, useWriteContract, useWaitForTransactionReceipt } from 'wagmi';
+import { useBlockNumber, useReadContract, useWriteContract, useWaitForTransactionReceipt } from 'wagmi';
 import { sdk } from '@farcaster/miniapp-sdk';
 
 import { formatAddress, formatDate } from '../utils/format';
@@ -44,6 +44,7 @@ interface Review {
 const MiniAppDetail = () => {
   const { id } = useParams();
   const navigate = useNavigate();
+  const { data: blockNumber } = useBlockNumber({ watch: true });
 
   const [reviewModalVisible, setReviewModalVisible] = useState(false);
   const [commentModalVisible, setCommentModalVisible] = useState(false);
@@ -56,12 +57,16 @@ const MiniAppDetail = () => {
     args: [id]
   }) as { data: MiniApp | undefined };
 
-  const { data: reviews = []} = useReadContract({
+  const { data: reviews = [], refetch: reviewsRefetch } = useReadContract({
     address: import.meta.env.VITE_CONTRACT_ADDRESS,
     abi: MiniAppReview.abi,
     functionName: 'getAppReviews',
     args: [id]
-  }) as { data: Review[] | undefined };
+  }) as { data: Review[] | undefined, refetch: () => void  };
+
+  useEffect(() => {
+    reviewsRefetch();
+  }, [blockNumber])
 
   const {
      writeContract,
