@@ -6,6 +6,7 @@ import ConnectMenu from "./components/ConnectMenu";
 import Home from "./pages/Home";
 import RegisterMiniApp from "./pages/RegisterMiniApp";
 import MiniAppDetail from "./pages/MiniAppDetail";
+import MyReviews from "./pages/MyReviews";
 
 function App() {
   useEffect(() => {
@@ -16,6 +17,9 @@ function App() {
    <HashRouter>
       <ConnectMenu />
       <Routes>
+        <Route
+          path="/myreviews"
+          element={<MyReviews />} />
         <Route
           path="/app/:id"
           element={<MiniAppDetail />} />

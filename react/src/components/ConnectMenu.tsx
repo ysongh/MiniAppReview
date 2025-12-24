@@ -30,10 +30,10 @@ const ConnectMenu = () => {
     {
       key: 'reviews',
       label: (
-        <div className="flex items-center gap-2">
+        <Link to="/myreviews" className="flex items-center gap-2">
           <Star size={16} />
           <span>My Reviews</span>
-        </div>
+        </Link>
       ),
     },
     {
