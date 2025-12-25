@@ -174,13 +174,13 @@ const ConnectMenu = () => {
                     <User size={18} />
                     <span>My Profile</span>
                   </a>
-                  <a
-                    href="#"
+                  <Link
+                    to="/myreviews"
                     className="flex items-center gap-3 px-3 py-2 rounded-lg hover:bg-gray-100 text-gray-700 font-medium transition-colors"
                   >
                     <Star size={18} />
                     <span>My Reviews</span>
-                  </a>
+                  </Link>
                   <a
                     href="#"
                     className="flex items-center gap-3 px-3 py-2 rounded-lg hover:bg-gray-100 text-gray-700 font-medium transition-colors"
