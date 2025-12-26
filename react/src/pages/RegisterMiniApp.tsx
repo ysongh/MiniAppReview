@@ -199,18 +199,21 @@ const RegisterMiniApp = () => {
   }
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-purple-50 to-blue-50 p-4">
-      <div className="max-w-2xl mx-auto pt-8">
-        {/* Header */}
-        <div className="mb-6">
+    <div className="min-h-screen bg-gradient-to-br from-purple-50 to-blue-50">
+      <div className="bg-white shadow-sm sticky top-0 z-10">
+        <div className="max-w-5xl mx-auto px-4 py-4">
           <Button
             onClick={() => navigate("/")}
             icon={<ArrowLeft size={16} />}
             type="text"
-            className="mb-4"
           >
             Back to Gallery
           </Button>
+        </div>
+      </div>
+      <div className="max-w-2xl mx-auto mt-4 p-4">
+        {/* Header */}
+        <div className="mb-6">
           <h1 className="text-3xl font-bold text-gray-900 mb-2">
             Register a Mini App
           </h1>
