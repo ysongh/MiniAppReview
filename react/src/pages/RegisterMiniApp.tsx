@@ -33,7 +33,6 @@ const RegisterMiniApp = () => {
     description: '',
     category: '',
     appUrl: '',
-    developerInfo: ''
   });
   const [errors, setErrors] = useState<any>({});
   const [loading, setLoading] = useState(false);
@@ -313,21 +312,6 @@ const RegisterMiniApp = () => {
               {errors.appUrl && (
                 <div className="text-red-500 text-sm mt-1">{errors.appUrl}</div>
               )}
-            </div>
-
-            <div>
-              <label className="block font-semibold text-gray-700 mb-1">
-                Developer/Contact Info (Optional)
-              </label>
-              <Input
-                size="large"
-                placeholder="@username or https://..."
-                value={formData.developerInfo}
-                onChange={(e) => handleInputChange('developerInfo', e.target.value)}
-              />
-              <div className="text-gray-500 text-sm mt-1">
-                Farcaster username, Twitter handle, or website
-              </div>
             </div>
 
             <div className="bg-blue-50 border border-blue-200 rounded-lg p-4">
