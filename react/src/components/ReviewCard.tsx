@@ -5,6 +5,7 @@ import { useBlockNumber, useReadContract, useWriteContract } from "wagmi";
 
 import MiniAppReview from '../artifacts/contracts/MiniAppReview.sol/MiniAppReview.json';
 import { formatAddress, formatDate } from '../utils/format';
+import { getPlaceholderProfileImg } from '../utils/placeholder';
 
 interface Review {
   name: string;
@@ -59,7 +60,7 @@ function ReviewCard({ id, appid, review, handleOpenCommentModal } : { id: number
   return (
     <div className="border-b border-gray-200 last:border-0 pb-4 last:pb-0">
       <div className="flex items-start gap-3">
-        <Avatar size={40} icon={<User />} className="bg-blue-500 flex-shrink-0" />
+        <Avatar size={40} icon={<User />} className="bg-blue-500 flex-shrink-0" src={getPlaceholderProfileImg(review?.reviewer)} />
         <div className="flex-1 min-w-0">
           <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-2 mb-2">
             <div>
@@ -108,7 +109,7 @@ function ReviewCard({ id, appid, review, handleOpenCommentModal } : { id: number
             <div className="ml-8 mt-3 space-y-3 border-l-2 border-gray-200 pl-4">
               {comments?.map((comment, commentIndex) => (
                 <div key={commentIndex} className="flex gap-2">
-                  <Avatar size={32} icon={<User />} className="bg-gray-400 flex-shrink-0" />
+                  <Avatar size={32} icon={<User />} className="bg-gray-400 flex-shrink-0" src={getPlaceholderProfileImg(comment?.commenter)} />
                   <div className="flex-1">
                     <div className="flex items-center gap-2 mb-1">
                       <span className="font-semibold text-sm text-gray-900">

@@ -5,6 +5,7 @@ import { Grid3x3, Plus, Star, User, Menu, X, Wallet, LogOut, Settings } from 'lu
 import { useAccount, useConnect, useDisconnect } from "wagmi";
 
 import { formatAddress } from '../utils/format';
+import { getPlaceholderProfileImg } from '../utils/placeholder';
 
 const ConnectMenu = () => {
   const { isConnected, address } = useAccount();
@@ -114,7 +115,7 @@ const ConnectMenu = () => {
                   trigger={['click']}
                 >
                   <div className="hidden sm:flex items-center gap-2 cursor-pointer bg-gray-100 hover:bg-gray-200 rounded-lg px-3 py-2 transition-colors">
-                    <Avatar size="small" icon={<User size={16} />} className="bg-purple-500" />
+                    <Avatar size="small" icon={<User size={16} />} className="bg-purple-500" src={getPlaceholderProfileImg(address)}/>
                     <span className="font-mono text-sm font-medium">{formatAddress(address)}</span>
                   </div>
                 </Dropdown>
