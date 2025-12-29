@@ -52,6 +52,7 @@ contract MiniAppReview {
     mapping(uint256 => mapping(address => mapping(address => bool))) public hasMarkedHelpful;
     
     mapping(address => uint256[]) public posterPost;
+    mapping(address => uint256[]) public userReviewedApps; // Track which apps a user has reviewed
     uint256[] public allAppIds;
     string[] public categories;
     
@@ -167,6 +168,9 @@ contract MiniAppReview {
             
             reviewIndex[_appId][msg.sender] = appReviews[_appId].length - 1;
             hasReviewed[_appId][msg.sender] = true;
+            
+            // Track that this user reviewed this app
+            userReviewedApps[msg.sender].push(_appId);
             
             app.totalRating += _rating;
             app.reviewCount++;
@@ -361,6 +365,22 @@ contract MiniAppReview {
     
     function getPosterPost(address _poster) external view returns (uint256[] memory) {
         return posterPost[_poster];
+    }
+    
+    /**
+     * @dev Get all app IDs that a user has reviewed
+     */
+    function getUserReviewedApps(address _user) external view returns (uint256[] memory) {
+        return userReviewedApps[_user];
+    }
+    
+    /**
+     * @dev Get a specific user's review for an app
+     */
+    function getUserReviewForApp(address _user, uint256 _appId) external view appExists(_appId) returns (Review memory) {
+        require(hasReviewed[_appId][_user], "User has not reviewed this app");
+        uint256 revIndex = reviewIndex[_appId][_user];
+        return appReviews[_appId][revIndex];
     }
     
     function addCategory(string memory _category) external onlyOwner {
