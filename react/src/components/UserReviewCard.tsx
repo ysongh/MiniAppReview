@@ -5,25 +5,60 @@ import { useReadContract } from 'wagmi';
 import MiniAppReview from '../artifacts/contracts/MiniAppReview.sol/MiniAppReview.json';
 import { formatDate } from '../utils/format';
 
+interface MiniApp {
+  name: string;
+  category: string;
+  description: string;
+  from: string;
+  appUrl: string;
+  difficulty: number;
+  totalRating: bigint;
+  averageRating: bigint;
+  reviewCount: bigint;
+  registeredAt: bigint;
+  isActive: boolean;
+  recommendPercent: bigint;
+}
+
+interface Review {
+  name: string;
+  comment: string;
+  reviewer: string;
+  appUrl: string;
+  timestamp: bigint;
+  rating: bigint;
+  registeredAt: bigint;
+  wouldRecommend: boolean;
+  recommendPercent: bigint;
+  helpfulCount: bigint
+}
+
 function UserReviewCard({ id, address }: { id: BigInt, address?: string }) {
   const { data: reviewData } = useReadContract({
     address: import.meta.env.VITE_CONTRACT_ADDRESS,
     abi: MiniAppReview.abi,
     functionName: 'getUserReviewForApp',
     args: [address, id]
-  }) as { data: any | undefined };
+  }) as { data: Review | undefined };
 
-  const handleEditReview = (appId: number) => {
+  const { data: miniapp } = useReadContract({
+    address: import.meta.env.VITE_CONTRACT_ADDRESS,
+    abi: MiniAppReview.abi,
+    functionName: 'getAppDetail',
+    args: [id]
+  }) as { data: MiniApp | undefined };
+
+  const handleEditReview = (appId: BigInt) => {
     console.log('Edit review for app', appId);
     // Navigate to edit modal or page
   };
 
-  const handleDeleteReview = (appId: number) => {
+  const handleDeleteReview = (appId: BigInt) => {
     console.log('Delete review for app', appId);
     // Show confirmation and delete
   };
 
-  const handleViewApp = (appId: number) => {
+  const handleViewApp = (appId: BigInt) => {
     console.log('View app', appId);
     // Navigate to app detail page
   };
@@ -49,10 +84,10 @@ function UserReviewCard({ id, address }: { id: BigInt, address?: string }) {
           <div className="flex flex-col sm:flex-row sm:items-start sm:justify-between gap-2 mb-2">
             <div className="flex-1">
               <h3 className="text-lg font-bold text-gray-900 mb-1">
-                {reviewData?.appName}
+                {miniapp?.name}
               </h3>
               <div className="flex flex-wrap gap-2 mb-2">
-                <Tag color="purple">{reviewData?.appCategory}</Tag>
+                <Tag color="purple">{miniapp?.category}</Tag>
                 {reviewData?.wouldRecommend && (
                   <Tag color="green">
                     <ThumbsUp size={10} className="inline mr-1" />
