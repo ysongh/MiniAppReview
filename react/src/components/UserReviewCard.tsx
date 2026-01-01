@@ -1,5 +1,5 @@
-import { Card, Rate, Tag, Button, Avatar } from 'antd';
-import { Calendar, Star, ExternalLink, Edit, Trash2, MessageCircle, ThumbsUp } from 'lucide-react';
+import { Card, Rate, Tag, Button } from 'antd';
+import { Calendar, ExternalLink, Edit, Trash2, MessageCircle, ThumbsUp } from 'lucide-react';
 import { useReadContract } from 'wagmi';
 
 import MiniAppReview from '../artifacts/contracts/MiniAppReview.sol/MiniAppReview.json';
@@ -68,17 +68,6 @@ function UserReviewCard({ id, address }: { id: BigInt, address?: string }) {
   return (
     <Card className="hover:shadow-lg transition-shadow">
       <div className="flex flex-col sm:flex-row gap-4">
-        {/* App Icon */}
-        <div className="flex-shrink-0">
-          <Avatar
-            size={64}
-            shape="square"
-            className="bg-gradient-to-br from-purple-400 to-blue-500"
-          >
-            <Star size={32} />
-          </Avatar>
-        </div>
-
         {/* Review Content */}
         <div className="flex-1 min-w-0">
           <div className="flex flex-col sm:flex-row sm:items-start sm:justify-between gap-2 mb-2">

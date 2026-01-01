@@ -4,6 +4,7 @@ import { useAccount, useReadContract } from 'wagmi';
 
 import MiniAppReview from '../artifacts/contracts/MiniAppReview.sol/MiniAppReview.json';
 import UserReviewCard from '../components/UserReviewCard';
+import { getPlaceholderProfileImg } from '../utils/placeholder';
 
 const MyReviews = () => {
   const { address } = useAccount();
@@ -45,7 +46,7 @@ const MyReviews = () => {
       <div className="bg-white shadow-sm">
         <div className="max-w-5xl mx-auto px-4 py-6">
           <div className="flex items-center gap-4 mb-4">
-            <Avatar size={64} icon={<User />} className="bg-purple-500" />
+            <Avatar size={64} icon={<User />} className="bg-purple-500" src={getPlaceholderProfileImg(address)}/>
             <div>
               <h1 className="text-2xl font-bold text-gray-900 m-0">My Activity</h1>
               <p className="text-sm text-gray-600 m-0">{userName}</p>
