@@ -20,15 +20,6 @@ const ConnectMenu = () => {
 
   const userMenuItems = [
     {
-      key: 'profile',
-      label: (
-        <div className="flex items-center gap-2">
-          <User size={16} />
-          <span>My Profile</span>
-        </div>
-      ),
-    },
-    {
       key: 'reviews',
       label: (
         <Link to="/myreviews" className="flex items-center gap-2">
@@ -168,13 +159,6 @@ const ConnectMenu = () => {
                       <span className="font-mono text-sm font-medium">{formatAddress(address)}</span>
                     </div>
                   </div>
-                  <a
-                    href="#"
-                    className="flex items-center gap-3 px-3 py-2 rounded-lg hover:bg-gray-100 text-gray-700 font-medium transition-colors"
-                  >
-                    <User size={18} />
-                    <span>My Profile</span>
-                  </a>
                   <Link
                     to="/myreviews"
                     className="flex items-center gap-3 px-3 py-2 rounded-lg hover:bg-gray-100 text-gray-700 font-medium transition-colors"
