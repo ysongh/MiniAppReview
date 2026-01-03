@@ -1,5 +1,5 @@
 import { Card, Rate, Tag, Button } from 'antd';
-import { Calendar, ExternalLink, Edit, Trash2, MessageCircle, ThumbsUp } from 'lucide-react';
+import { Calendar, ExternalLink, Edit, MessageCircle, ThumbsUp } from 'lucide-react';
 import { useReadContract } from 'wagmi';
 
 import MiniAppReview from '../artifacts/contracts/MiniAppReview.sol/MiniAppReview.json';
@@ -51,11 +51,6 @@ function UserReviewCard({ id, address }: { id: BigInt, address?: string }) {
   const handleEditReview = (appId: BigInt) => {
     console.log('Edit review for app', appId);
     // Navigate to edit modal or page
-  };
-
-  const handleDeleteReview = (appId: BigInt) => {
-    console.log('Delete review for app', appId);
-    // Show confirmation and delete
   };
 
   const handleViewApp = (appId: BigInt) => {
@@ -131,14 +126,6 @@ function UserReviewCard({ id, address }: { id: BigInt, address?: string }) {
               onClick={() => handleEditReview(id)}
             >
               Edit
-            </Button>
-            <Button
-              size="small"
-              danger
-              icon={<Trash2 size={14} />}
-              onClick={() => handleDeleteReview(id)}
-            >
-              Delete
             </Button>
           </div>
         </div>
