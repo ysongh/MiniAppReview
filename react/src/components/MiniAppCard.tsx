@@ -5,20 +5,8 @@ import { useReadContract } from 'wagmi';
 
 import MiniAppReview from '../artifacts/contracts/MiniAppReview.sol/MiniAppReview.json';
 import { formatAddress } from '../utils/format';
+import { MiniApp } from '../utils/types';
 
-interface MiniApp {
-  name: string;
-  category: string;
-  description: string;
-  from: string;
-  appUrl: string;
-  difficulty: number;
-  averageRating: bigint;
-  reviewCount: bigint;
-  isActive: boolean;
-  totalRating: bigint;
-  recommendPercent: bigint;
-}
 
 function MiniAppCard({ id }: {id : BigInt }) {
   const navigate = useNavigate();

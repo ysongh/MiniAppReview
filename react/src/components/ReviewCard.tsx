@@ -6,25 +6,7 @@ import { useBlockNumber, useReadContract, useWriteContract } from "wagmi";
 import MiniAppReview from '../artifacts/contracts/MiniAppReview.sol/MiniAppReview.json';
 import { formatAddress, formatDate } from '../utils/format';
 import { getPlaceholderProfileImg } from '../utils/placeholder';
-
-interface Review {
-  name: string;
-  comment: string;
-  reviewer: string;
-  appUrl: string;
-  timestamp: bigint;
-  rating: bigint;
-  registeredAt: bigint;
-  wouldRecommend: boolean;
-  recommendPercent: bigint;
-  helpfulCount: bigint
-}
-
-interface Comment {
-  comment: string;
-  commenter: string;
-  timestamp: bigint;
-}
+import { Comment, Review } from '../utils/types';
 
 function ReviewCard({ id, appid, review, handleOpenCommentModal } : { id: number, appid?: string, review: Review, handleOpenCommentModal: Function }) {
   const { data: blockNumber } = useBlockNumber({ watch: true });

@@ -6,40 +6,11 @@ import { useBlockNumber, useReadContract, useWriteContract, useWaitForTransactio
 import { sdk } from '@farcaster/miniapp-sdk';
 
 import { formatAddress, formatDate } from '../utils/format';
+import { MiniApp, Review } from '../utils/types';
 import MiniAppReview from '../artifacts/contracts/MiniAppReview.sol/MiniAppReview.json';
 import ReviewCard from '../components/ReviewCard';
 import ReviewModal from '../components/ReviewModal';
 import CommentModal from '../components/CommentModal';
-
-interface MiniApp {
-  name: string;
-  category: string;
-  description: string;
-  from: string;
-  appUrl: string;
-  difficulty: number;
-  totalRating: bigint;
-  averageRating: bigint;
-  reviewCount: bigint;
-  registeredAt: bigint;
-  isActive: boolean;
-  recommendPercent: bigint;
-}
-
-interface Review {
-  name: string;
-  comment: string;
-  reviewer: string;
-  appUrl: string;
-  difficulty: number;
-  timestamp: bigint;
-  quality: bigint;
-  rating: bigint;
-  registeredAt: bigint;
-  wouldRecommend: boolean;
-  recommendPercent: bigint;
-  helpfulCount: bigint
-}
 
 const MiniAppDetail = () => {
   const { id } = useParams();

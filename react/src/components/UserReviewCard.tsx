@@ -4,34 +4,7 @@ import { useReadContract } from 'wagmi';
 
 import MiniAppReview from '../artifacts/contracts/MiniAppReview.sol/MiniAppReview.json';
 import { formatDate } from '../utils/format';
-
-interface MiniApp {
-  name: string;
-  category: string;
-  description: string;
-  from: string;
-  appUrl: string;
-  difficulty: number;
-  totalRating: bigint;
-  averageRating: bigint;
-  reviewCount: bigint;
-  registeredAt: bigint;
-  isActive: boolean;
-  recommendPercent: bigint;
-}
-
-interface Review {
-  name: string;
-  comment: string;
-  reviewer: string;
-  appUrl: string;
-  timestamp: bigint;
-  rating: bigint;
-  registeredAt: bigint;
-  wouldRecommend: boolean;
-  recommendPercent: bigint;
-  helpfulCount: bigint
-}
+import { MiniApp, Review } from '../utils/types';
 
 function UserReviewCard({ id, address }: { id: BigInt, address?: string }) {
   const { data: reviewData } = useReadContract({
