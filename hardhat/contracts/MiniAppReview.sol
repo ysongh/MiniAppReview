@@ -12,7 +12,6 @@ contract MiniAppReview {
     struct App {
         uint256 id;
         string name;
-        string description;
         string category;
         string appUrl;
         address from;
@@ -98,7 +97,6 @@ contract MiniAppReview {
      */
     function registerApp(
         string memory _name,
-        string memory _description,
         string memory _category,
         string memory _appUrl
     ) external returns (uint256) {
@@ -110,7 +108,6 @@ contract MiniAppReview {
         apps[totalApps] = App({
             id: totalApps,
             name: _name,
-            description: _description,
             category: _category,
             appUrl: _appUrl,
             from: msg.sender,
@@ -232,7 +229,6 @@ contract MiniAppReview {
     function updateApp(
         uint256 _appId,
         string memory _name,
-        string memory _description,
         string memory _category,
         string memory _appUrl
     ) external appExists(_appId) {
@@ -240,7 +236,6 @@ contract MiniAppReview {
         require(msg.sender == app.from, "Only Poster can update");
         
         app.name = _name;
-        app.description = _description;
         app.category = _category;
         app.appUrl = _appUrl;
         

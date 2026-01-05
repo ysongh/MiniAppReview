@@ -30,7 +30,6 @@ const RegisterMiniApp = () => {
 
   const [formData, setFormData] = useState({
     name: '',
-    description: '',
     category: '',
     appUrl: '',
   });
@@ -56,13 +55,6 @@ const RegisterMiniApp = () => {
     }
     if (formData.name.length > 50) {
       newErrors.name = 'Name must be less than 50 characters';
-    }
-    
-    if (!formData.description || formData.description.length < 10) {
-      newErrors.description = 'Description must be at least 10 characters';
-    }
-    if (formData.description.length > 500) {
-      newErrors.description = 'Description must be less than 500 characters';
     }
     
     if (!formData.category) {
@@ -93,13 +85,13 @@ const RegisterMiniApp = () => {
     setLoading(true);
     
     try {
-      const {name, description, category, appUrl} = formData;
+      const {name, category, appUrl} = formData;
 
       writeContract({
         address: import.meta.env.VITE_CONTRACT_ADDRESS,
         abi: MiniAppReview.abi,
         functionName: "registerApp",
-        args: [name, description, category, appUrl]
+        args: [name, category, appUrl]
       })
       
       setRegisteredApp({
@@ -248,25 +240,6 @@ const RegisterMiniApp = () => {
               />
               {errors.name && (
                 <div className="text-red-500 text-sm mt-1">{errors.name}</div>
-              )}
-            </div>
-
-            <div>
-              <label className="block font-semibold text-gray-700 mb-1">
-                Description <span className="text-red-500">*</span>
-              </label>
-              <TextArea
-                size="large"
-                placeholder="Describe what the app does and its key features..."
-                rows={4}
-                maxLength={500}
-                showCount
-                value={formData.description}
-                onChange={(e) => handleInputChange('description', e.target.value)}
-                status={errors.description ? 'error' : ''}
-              />
-              {errors.description && (
-                <div className="text-red-500 text-sm mt-1">{errors.description}</div>
               )}
             </div>
 

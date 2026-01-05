@@ -1,7 +1,6 @@
 export interface MiniApp {
   name: string;
   category: string;
-  description: string;
   from: string;
   appUrl: string;
   difficulty: number;
