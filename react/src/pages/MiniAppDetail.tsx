@@ -121,7 +121,7 @@ const MiniAppDetail = () => {
                     <Tag color="purple" className="text-sm">{miniapp?.category}</Tag>
                   </div>
                   <p className="text-gray-600 mb-4">
-                    {miniapp?.description}
+                    {miniapp?.appUrl}
                   </p>
                 </div>
 

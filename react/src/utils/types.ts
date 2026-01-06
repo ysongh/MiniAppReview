@@ -5,6 +5,7 @@ export interface MiniApp {
   appUrl: string;
   difficulty: number;
   averageRating: bigint;
+  registeredAt: bigint;
   reviewCount: bigint;
   isActive: boolean;
   totalRating: bigint;

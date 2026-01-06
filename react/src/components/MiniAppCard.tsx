@@ -34,7 +34,7 @@ function MiniAppCard({ id }: {id : BigInt }) {
                 {miniapp?.name}
               </h3>
               <p className="text-sm text-gray-600 m-0 line-clamp-2">
-                {miniapp?.description}
+                {miniapp?.appUrl}
               </p>
             </div>
 
