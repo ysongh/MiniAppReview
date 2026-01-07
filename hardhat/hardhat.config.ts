@@ -40,6 +40,12 @@ export default defineConfig({
       accounts: [configVariable("PRIVATE_KEY")],
       chainId: 11142220
     },
+    base: {
+      type: "http",
+      url: configVariable("BASE_RPC_URL"),
+      accounts: [configVariable("PRIVATE_KEY")],
+      chainId: 8453
+    },
   },
   paths: {
     artifacts: '../react/src/artifacts',
